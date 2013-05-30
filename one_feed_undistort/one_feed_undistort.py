@@ -1,6 +1,6 @@
 #
-# This file undistorts one frame from the video from Studio1-1
-# This is to test the undistort function and parameters from .mat file
+# This file undistorts one feed from the video from Studio1-1
+# This is to test the undistort function on video 
 #
 
 import cv2
@@ -11,7 +11,7 @@ import numpy as np
 
 # read in values from csv storing data 
 # TODO: look into getting straight from .mat or converting file to csv
-with open('Studio1-1.csv', 'rb') as csvfile:
+with open('../calibrations/Studio1-1.csv', 'rb') as csvfile:
   valuereader = csv.reader(csvfile, delimiter=',')
   for row in valuereader:
     if row[0] == 'fc':
