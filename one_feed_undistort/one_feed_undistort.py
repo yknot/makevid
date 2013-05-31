@@ -28,6 +28,7 @@ with open('../calibrations/Studio1-1.csv', 'rb') as csvfile:
 source = cv2.VideoCapture()
 source.open('Studio1-1.avi')
 
+
 # from the parameters given in the .mat file create matricies
 intrinsic_matrix = np.array([[fc[0], 0.0,   cc[0]], 
                              [0.0,   fc[1], cc[1]], 
@@ -39,16 +40,16 @@ distortion_coefficient = np.array([kc[0], kc[1], kc[2], kc[3], kc[4]],
 # open a video writer
 #destination = cv2.VideoWriter.open('Studio1-1-out.avi')
 
-fps = 24
+fps = 18
 width = 1280
 height = 960
 # uncompressed YUV 4:2:0 chroma subsampled
-fourcc = cv.CV_FOURCC('I','4','2','0')
+fourcc = cv.CV_FOURCC('Y','V','1','2')
 writer = cv2.VideoWriter('Studio1-1-out.avi', fourcc, fps, (width, height), 1)
 
 for frame in source.read():
   # run the undistortion function
-  destination = cv2.undistort(frame, intrinsic_matrix, distortion_coefficient)
+  destination = cv2.undistort(frame[1], intrinsic_matrix, distortion_coefficient)
 
 
 # release the capture (file)
