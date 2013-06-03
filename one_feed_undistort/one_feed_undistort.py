@@ -8,6 +8,9 @@ import cv2
 import cv2.cv as cv
 import csv
 import numpy as np
+# for using ffmeg and file structure information
+import os
+import subprocess
 
 # read in values from csv storing data 
 # TODO: look into getting straight from .mat or converting file to csv
@@ -23,11 +26,9 @@ with open('../calibrations/Studio1-1.csv', 'rb') as csvfile:
     else:
       print 'error in value'
 
-# load the source video
-# TODO: Can't open avi look into dll problems
-source = cv2.VideoCapture()
-source.open('Studio1-1.avi')
 
+# WAIT FOR PROCESS TO FINISH
+p = subprocess.Popen('setup.bat')
 
 # from the parameters given in the .mat file create matricies
 intrinsic_matrix = np.array([[fc[0], 0.0,   cc[0]], 
@@ -37,20 +38,19 @@ intrinsic_matrix = np.array([[fc[0], 0.0,   cc[0]],
 distortion_coefficient = np.array([kc[0], kc[1], kc[2], kc[3], kc[4]], 
                                    dtype=np.float32)
 
-# open a video writer
-#destination = cv2.VideoWriter.open('Studio1-1-out.avi')
 
-fps = 18
-width = 1280
-height = 960
-# uncompressed YUV 4:2:0 chroma subsampled
-fourcc = cv.CV_FOURCC('Y','V','1','2')
-writer = cv2.VideoWriter('Studio1-1-out.avi', fourcc, fps, (width, height), 1)
+# finds the number of frames created by ffmpeg
+num_files = len([name for name in os.listdir('temp/') 
+  if os.path.isfile('temp/'+name)])
 
-for frame in source.read():
+# ADD PRINT STATEMENTS FOR PROGRESS
+for i in range(1, num_files+1):
+  zeros = '0' * (8-len(str(i)))
+  filename = zeros + str(i) + '.png'
+  source = cv2.imread('temp/' + filename, 1)
   # run the undistortion function
-  destination = cv2.undistort(frame[1], intrinsic_matrix, distortion_coefficient)
+  destination = cv2.undistort(source, intrinsic_matrix, distortion_coefficient)
+  # write the image with the same filename but with out prefix
+  cv2.imwrite('out/'+filename, destination)
 
-
-# release the capture (file)
-source.release()
+p2 = subprocess.Popen('ouput.bat')
