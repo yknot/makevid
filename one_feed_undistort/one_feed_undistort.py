@@ -26,9 +26,11 @@ with open('../calibrations/Studio1-1.csv', 'rb') as csvfile:
     else:
       print 'error in value'
 
+print 'start setup'
 
-# WAIT FOR PROCESS TO FINISH
 p = subprocess.Popen('setup.bat')
+print 'wait for setup to finish'
+p.wait()
 
 # from the parameters given in the .mat file create matricies
 intrinsic_matrix = np.array([[fc[0], 0.0,   cc[0]], 
@@ -43,8 +45,10 @@ distortion_coefficient = np.array([kc[0], kc[1], kc[2], kc[3], kc[4]],
 num_files = len([name for name in os.listdir('temp/') 
   if os.path.isfile('temp/'+name)])
 
-# ADD PRINT STATEMENTS FOR PROGRESS
+print 'start undistorting'
+print str(num_files), 'frames'
 for i in range(1, num_files+1):
+  print '\ron frame ' + str(i),
   zeros = '0' * (8-len(str(i)))
   filename = zeros + str(i) + '.png'
   source = cv2.imread('temp/' + filename, 1)
@@ -53,4 +57,8 @@ for i in range(1, num_files+1):
   # write the image with the same filename but with out prefix
   cv2.imwrite('out/'+filename, destination)
 
-p2 = subprocess.Popen('ouput.bat')
+print 'put video together'
+
+p2 = subprocess.Popen('output.bat')
+
+p2.wait()

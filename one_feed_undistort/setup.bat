@@ -1,5 +1,5 @@
-REM rmdir temp /S /Q
-REM rmdir out /S /Q
+rmdir temp /S /Q
+rmdir out /S /Q
 mkdir temp
 mkdir out
 cd temp
