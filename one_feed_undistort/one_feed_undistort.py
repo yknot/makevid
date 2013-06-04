@@ -12,6 +12,11 @@ import numpy as np
 import os
 import subprocess
 
+
+#
+# SETUP variables
+#
+
 # read in values from csv storing data 
 # TODO: look into getting straight from .mat or converting file to csv
 with open('../calibrations/Studio1-1.csv', 'rb') as csvfile:
@@ -26,12 +31,6 @@ with open('../calibrations/Studio1-1.csv', 'rb') as csvfile:
     else:
       print 'error in value'
 
-print 'start setup'
-
-p = subprocess.Popen('setup.bat')
-print 'wait for setup to finish'
-p.wait()
-
 # from the parameters given in the .mat file create matricies
 intrinsic_matrix = np.array([[fc[0], 0.0,   cc[0]], 
                              [0.0,   fc[1], cc[1]], 
@@ -40,25 +39,52 @@ intrinsic_matrix = np.array([[fc[0], 0.0,   cc[0]],
 distortion_coefficient = np.array([kc[0], kc[1], kc[2], kc[3], kc[4]], 
                                    dtype=np.float32)
 
+#
+# SETUP files
+#
 
-# finds the number of frames created by ffmpeg
+print 'start setup'
+# runs setup batch file to create directories and convert video to images
+p = subprocess.Popen('setup.bat')
+# wait for the subprocess to finish
+p.wait()
+
+# finds the number of frames created
 num_files = len([name for name in os.listdir('temp/') 
   if os.path.isfile('temp/'+name)])
 
+
+
+
+#
+# UNDISTORT files
+#
+
+# print statments to show progress
 print 'start undistorting'
 print str(num_files), 'frames'
+
+# loop through each image and undistort the image
 for i in range(1, num_files+1):
   print '\ron frame ' + str(i),
+
+  # create the filename and open the file
   zeros = '0' * (8-len(str(i)))
   filename = zeros + str(i) + '.png'
   source = cv2.imread('temp/' + filename, 1)
+
   # run the undistortion function
   destination = cv2.undistort(source, intrinsic_matrix, distortion_coefficient)
   # write the image with the same filename but with out prefix
   cv2.imwrite('out/'+filename, destination)
 
-print 'put video together'
 
+#
+# OUTPUT video
+#
+
+print 'put video together'
+# runs output batch file to run mencoder, mplayer, and ffmpeg
 p2 = subprocess.Popen('output.bat')
 
 p2.wait()
