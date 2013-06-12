@@ -7,6 +7,7 @@ import sys
 from settings import *
 from init import *
 from undistort import *
+from stitch import *
 
 
 #
