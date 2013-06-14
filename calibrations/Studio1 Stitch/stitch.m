@@ -32,7 +32,7 @@ input_min1 = min(input_points1);
 C = uint8(zeros(960,2274, 3));
 
 [r,c,h] = size(A);
-xpos = base_min1(2)-input_min1(2);   % shoule be 11
+xpos = base_min1(2)-input_min1(2);   % should be 11
 ypos = 1;
 
 C(xpos:xpos+r-1,ypos:ypos+c-1,:) = A;
