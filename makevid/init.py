@@ -3,13 +3,13 @@ import csv
 import numpy as np
 
 # function to read the csvs of calibration numbers
-def read_csvs(name):
+def read_csvs(name, cams):
   fc = []
   cc = [] # store the variables from the calibrations
   kc = []
 
   # loop through each calibration file
-  for i in range(1,5):
+  for i in range(1,cams+1):
     filename = name + str(i) + '.csv'
 
     # read in values from csvs storing data 
@@ -34,22 +34,25 @@ def read_csvs(name):
 def matricies(location):
   if location == 1:
     name = '../calibrations/Studio1-'
+    cams = 4
   elif location == 2:
     name = '../calibrations/Studio2-'
+    cams = 6
   elif location == 3:
     name = '../calibrations/Mez'
+    cams = 6
   else:
     print 'Error: can\'t retrieve matricies'
 
   # get the variable values
-  fc, cc, kc = read_csvs(name)
+  fc, cc, kc = read_csvs(name, cams)
   
   # set up the blanck matricies
   intrinsic_matrix = []
   distortion_coefficient = []
 
-  # for each camera (assuming studio 1 at this point)
-  for i in range(4):
+  # for each camera
+  for i in range(cams):
     # from the parameters given in the .mat file create matricies
     intrinsic_matrix.append(np.array([[fc[i][1], 0.0,   cc[i][0]], 
                                       [0.0,   fc[i][1], cc[i][1]], 
