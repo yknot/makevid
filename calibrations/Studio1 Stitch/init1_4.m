@@ -39,18 +39,18 @@
 % cpselect(D, b);
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%% Camera 3 and 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% Camera 3 and 124 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% open files
 % c = imread('Studio1-3-out.png', 'png');
 
 %% get the control points
-% cpselect(c,D);
+% cpselect(c,ABD);
 
 %% create the transform
-% TFORMcD = cp2tform(input_points_cD, base_points_cD, 'projective');
+% TFORMcABD = cp2tform(input_points_cABD, base_points_cABD, 'projective');
 
 %% transform the a image
-% C = imtransform(c, TFORMcD);
+% C = imtransform(c, TFORMcABD);
 
 %% make new control points based on the transformed input image C
-% cpselect(C, D);
+% cpselect(C, ABD);
