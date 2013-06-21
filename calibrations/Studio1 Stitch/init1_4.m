@@ -24,7 +24,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%% Camera 2 and 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% open files
-% d = imread('Studio1-2-out.png', 'png');
+% d = imread('Stuido1-2-out.png', 'png');
 
 %% get the control points
 % cpselect(d,b);

@@ -30,3 +30,4 @@ destination4 = cv2.undistort(source4, intrinsic_matrix[3],
 # save image that was created by undistorting
 cv2.imwrite('Studio1-1-out.png', destination1)
 cv2.imwrite('Studio1-4-out.png', destination4)
+
