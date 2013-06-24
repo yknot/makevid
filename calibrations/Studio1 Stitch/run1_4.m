@@ -5,8 +5,7 @@
 % stitch them all together into a mosaic
 %
 
-
-%%%%%%%%%%%%%%%%%%%%%%%% Combine a and b %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Combine A and b %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 AB = uint8(zeros(800,1000, 3));
 
 [row,col,hei] = size(A);
@@ -24,8 +23,7 @@ AB(xpos:xpos+row-1,ypos:ypos+col-ycut,:) = b(:,ycut:col,:);
 
 % figure; imshow(AB);
 
-
-%%%%%%%%%%%%%%%%%%%%%%%% Combine d and b %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Combine D and b %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 DB = uint8(zeros(1000,1000, 3));
 
 [row,col,hei] = size(D);
@@ -44,7 +42,6 @@ DB(ypos:ymax,xpos:xpos+col-1,:) = b(ypos:ymax,:,:);
 
 % figure; imshow(DB);
 
-
 %%%%%%%%%%%%%%%%%%%%%%% Combine AB and DB %%%%%%%%%%%%%%%%%%%%%%%%%%%
 ABD = uint8(zeros(1000,1000, 3));
 
@@ -61,12 +58,9 @@ ymax = 944;
 
 ABD(ypos:ymax,xpos:xpos+col-1,:) = AB(ypos:ymax,:,:);
 
-
 % figure; imshow(ABD);
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%% Combine c and ABD %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Combine C and ABD %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ABCD = uint8(zeros(1000,1000, 3));
 
 [row,col,hei] = size(ABD);
