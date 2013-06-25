@@ -31,3 +31,17 @@ destination4 = cv2.undistort(source4, intrinsic_matrix[3],
 cv2.imwrite('Studio1-1-out.png', destination1)
 cv2.imwrite('Studio1-4-out.png', destination4)
 
+
+# src is destination 1
+src = destination1
+# map1 and 2 need to be read in
+interpoolation = 'INTER_NEAREST'
+dst1 = cv2.remap(src, map1, map2, interpoolation)
+
+# src is destination 1
+src = destination4
+# map1 and 2 need to be read in
+dst4 = cv2.remap(src, map1, map2, interpoolation)
+
+
+# stitch images together
