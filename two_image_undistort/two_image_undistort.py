@@ -8,44 +8,60 @@ import cv2
 # used for legacy functions which should be changed out for cv2 functions
 import cv2.cv as cv
 import numpy as np
+# for loading mat file
+import scipy.io
 
-# # file that puts together intrinsic and distortion matricies
-# from init import *
-
-# # create those matricies
-# intrinsic_matrix, distortion_coefficient = matricies()
+# load mat file with maps and weights
+maps = scipy.io.loadmat('maps.mat')
 
 # load the source images
 source1 = cv2.imread('Studio1-1.png', 1)
 source4 = cv2.imread('Studio1-4.png', 1)
 
-# # run the undistortion function
-# # base 0 therefore 0 = cam 1
-# destination1 = cv2.undistort(source1, intrinsic_matrix[0],
-#                                       distortion_coefficient[0])
-# destination4 = cv2.undistort(source4, intrinsic_matrix[3],
-#                                       distortion_coefficient[3])
+#
+# REMAP images to final state
+#
 
 
-# # save image that was created by undistorting
-# cv2.imwrite('Studio1-1-out.png', destination1)
-# cv2.imwrite('Studio1-4-out.png', destination4)
+# IMAGE 1
 
-# src is destination 1
-src = source1
-# map1 and 2 need to be read in
-map1 = cv2.imread('mx1.bmp', 1)
-map2 = cv2.imread('my1.bmp', 1)
+# map1 and 2 grabbed from maps dictionary
+#### TODO probably don't need to duplicate variable, either pointer or direct ref in remap
+map1 = np.float32(maps['m_x'][0])
+map2 = np.float32(maps['m_y'][0])
 # interpolation method
 interpolation = 1
-dst1 = cv2.remap(src, map1, map2, interpolation)
+dst1 = cv2.remap(source1, map1, map2, interpolation)
 
-# src is destination 1
-src = source4
-# map1 and 2 need to be read in
-map1 = cv2.imread('mx4.bmp', 1)
-map2 = cv2.imread('my4.bmp', 1)
-dst4 = cv2.remap(src, map1, map2, interpolation)
+# IMAGE 2
 
+# map1 and 2 grabbed from maps dictionary
+#### also not neccesary
+map1 = np.float32(maps['m_x'][1])
+map2 = np.float32(maps['m_y'][1])
+dst4 = cv2.remap(source4, map1, map2, interpolation)
 
-# stitch images together
+#
+# STITCH images together
+#
+
+# get final dimensions for for loop
+row = len(dst1)
+col = len(dst1[1])
+# grab weights from maps dictionary
+#### also not neccesary
+wgt1 = np.float32(maps['weights'][0])
+wgt4 = np.float32(maps['weights'][1])
+
+# create blank image
+final = np.empty([row,col,3], 'uint8')
+
+# for each row, col and channel
+for r in range(row):
+  for c in range(col):
+    for d in range(3):
+      # add matricies with the weights dictating how much of each pixel to use
+      final[r][c][d] = dst1[r][c][d]*wgt1[r][c] + dst4[r][c][d]*wgt4[r][c]
+
+# write final image to file
+cv2.imwrite('Mosaic.png', final)

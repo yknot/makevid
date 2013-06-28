@@ -9,5 +9,5 @@ Undistort
 
 - [x] One frame from one feed undistorted
 - [x] One feed video undistorted frame by frame
-- [ ] One frame from two feeds undistorted and stitched
+- [x] One frame from two feeds undistorted and stitched
 - [ ] Two feeds undistorted and stiched
