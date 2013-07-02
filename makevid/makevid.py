@@ -25,6 +25,9 @@ else:
 # SETUP variables
 #
 
+# if setting is stitching no need to run matricies() instead run something else
+# use this to get specific maps file that we need
+
 # get the neccessary calibration matricies
 intrinsic_matrix, distortion_coefficient = matricies(location)
 

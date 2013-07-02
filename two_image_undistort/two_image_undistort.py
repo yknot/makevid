@@ -12,7 +12,7 @@ import numpy as np
 import scipy.io
 
 # load mat file with maps and weights
-maps = scipy.io.loadmat('maps.mat')
+maps = scipy.io.loadmat('../makevid/maps.mat')
 
 # load the source images
 source1 = cv2.imread('Studio1-1.png', 1)

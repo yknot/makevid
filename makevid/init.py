@@ -1,45 +1,27 @@
 
 import csv
 import numpy as np
+# for reading mat files
+import scipy.io
 
-# function to read the csvs of calibration numbers
-def read_csvs(name, cams):
-  fc = []
-  cc = [] # store the variables from the calibrations
-  kc = []
+def read_csvs(name):
+  """function to read the csvs of calibration numbers"""
+  calib = scipy.io.loadmat('calib.mat')
+  
+  return calib[name+'_fc'], calib[name+'_cc'], calib[name+'_kc']
 
-  # loop through each calibration file
-  for i in range(1,cams+1):
-    filename = name + str(i) + '.csv'
-
-    # read in values from csvs storing data 
-    with open(filename, 'rb') as csvfile:
-      valuereader = csv.reader(csvfile, delimiter=',')
-      # reads in values and double checks that the values are correct
-      for row in valuereader:
-        # grab all but first one since that is variable name
-        if row[0] == 'fc':
-          fc.append(row[1:])
-        elif row[0] == 'cc':
-          cc.append(row[1:])
-        elif row[0] == 'kc':
-          kc.append(row[1:])
-        else:
-          print 'error in value'
-  # return variables
-  return fc, cc, kc
-
-# function to create the intrinsic and distortion matricies based
-#    on the variables recorded in the function above
 def matricies(location):
+  """function to create the intrinsic and distortion matricies based
+    on the variables recorded in the function above"""
+  
   if location == 1:
-    name = '../calibrations/Studio1-'
+    name = 'studio1'
     cams = 4
   elif location == 2:
-    name = '../calibrations/Studio2-'
+    name = 'studio2'
     cams = 6
   elif location == 3:
-    name = '../calibrations/Mez'
+    name = 'mez'
     cams = 6
   else:
     print 'Error: can\'t retrieve matricies'
@@ -54,7 +36,7 @@ def matricies(location):
   # for each camera
   for i in range(cams):
     # from the parameters given in the .mat file create matricies
-    intrinsic_matrix.append(np.array([[fc[i][1], 0.0,   cc[i][0]], 
+    intrinsic_matrix.append(np.array([[fc[i][0], 0.0,   cc[i][0]], 
                                       [0.0,   fc[i][1], cc[i][1]], 
                                       [0.0,   0.0,   1.0 ]], 
                                       dtype=np.float32))
