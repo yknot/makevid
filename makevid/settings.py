@@ -7,8 +7,6 @@
 #   settings for running on all files in folder
 #
 
-
-
 import sys
 
 def set_settings(args):
@@ -21,6 +19,7 @@ def set_settings(args):
   elif args[1] == 'feeds':
     setting = 4
   else:
+    print 'Error reading sys.argv'
     sys.exit()
 
   if args[2] == 'Studio1':
@@ -30,6 +29,7 @@ def set_settings(args):
   elif args[2] == 'Mez':
     location = 3
   else:
+    print 'Error reading sys.argv'
     sys.exit()
 
   return setting, location, args[3], args[4]
@@ -53,9 +53,19 @@ def settings():
 
   if location > 3 or location < 1:
     sys.exit()
-
-  cam = int(raw_input('Enter camera number: '))
-
-  filename = raw_input('Enter filename: ')
+  elif setting > 2:
+    cam = []
+    filename = []
+    c = 1
+    while c != 0:
+      c = int(raw_input('Enter camera number: '))
+      if c == 0:
+        break
+      cam.append(c)
+      f = raw_input('Enter filename: ')
+      filename.append(f)
+  else:
+    cam = int(raw_input('Enter camera number: '))  
+    filename = raw_input('Enter filename: ')
 
   return setting, location, cam, filename

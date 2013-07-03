@@ -1,5 +1,4 @@
 
-import csv
 import numpy as np
 # for reading mat files
 import scipy.io
@@ -27,7 +26,7 @@ def matricies(location):
     print 'Error: can\'t retrieve matricies'
 
   # get the variable values
-  fc, cc, kc = read_csvs(name, cams)
+  fc, cc, kc = read_csvs(name)
   
   # set up the blanck matricies
   intrinsic_matrix = []
@@ -44,3 +43,18 @@ def matricies(location):
                                             kc[i][3], kc[i][4]], 
                                             dtype=np.float32))
   return intrinsic_matrix, distortion_coefficient
+
+def maps(location):
+  """function to get the maps needed to stitch together frames
+     uses the location parameter to grap the right maps"""
+
+  if location == 1:
+    maps = scipy.io.loadmat('studio1_maps.mat')
+  elif location == 2:
+    maps = scipy.io.loadmat('studio2_maps.mat')
+  elif location == 3:
+    maps = scipy.io.loadmat('mez_maps.mat')
+  else:
+    print 'Error: can\'t read maps'
+
+  return maps
