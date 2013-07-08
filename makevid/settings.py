@@ -32,6 +32,19 @@ def set_settings(args):
     print 'Error reading sys.argv'
     sys.exit()
 
+  if len(args) > 5:
+    cams = []
+    filenames = []
+    for i in range(len(args)):
+      if i < 3: 
+        continue
+      elif i % 2 == 1:
+        cams.append(int(args[i]))
+      elif i % 2 == 0:
+        filenames.append(args[i])
+    
+    return setting, location, cams, filenames
+
   return setting, location, args[3], args[4]
 
 

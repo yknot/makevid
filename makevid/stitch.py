@@ -6,6 +6,7 @@ import cv2
 # used for legacy functions which should be changed out for cv2 functions
 import cv2.cv as cv
 import numpy as np
+import sys
 
 # read in more intelligently based on input param
 # load the source images
@@ -26,33 +27,17 @@ def remap(maps, cams, filenames):
       i = 3
     elif c == 3:
       i = 2
-    else:
+    elif c == 4:
       i = 1
+    else:
+      print "Error"
     # map1 = np.float32(maps['m_x'][i])
     # map2 = np.float32(maps['m_y'][i])
     source = cv2.imread(name, 1)
     dst.append(cv2.remap(source, np.float32(maps['m_x'][i]), np.float32(maps['m_y'][i]), 1))
-    print 'Done 1!'
+    print 'Done', str(c) +'!'
+    sys.stdout.flush()
 
-  # # IMAGE 1
-
-  # # map1 and 2 grabbed from maps dictionary
-  # #### TODO probably don't need to duplicate variable, either pointer or direct ref in remap
-  # map1 = np.float32(maps['m_x'][0])
-  # map2 = np.float32(maps['m_y'][0])
-  # # interpolation method
-  # interpolation = 1
-  # dst1 = cv2.remap(source1, map1, map2, interpolation)
-  # print 'Done 1!'
-  # # IMAGE 2st
-
-  # # map1 and 2 grabbed from maps dictionary
-  # #### also not neccesary
-  # map1 = np.float32(maps['m_x'][1])
-  # map2 = np.float32(maps['m_y'][1])
-  # dst4 = cv2.remap(source4, map1, map2, interpolation)
-  # print 'Done 2!'
-  #
   # STITCH images together
   #
   print 'Stitching Images'

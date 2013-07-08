@@ -13,11 +13,12 @@ from stitch import *
 # GET settings
 #
 # find out what the user wants either through arguments or asking
-if len(sys.argv) != 5:
+if len(sys.argv) < 5:
   setting, location, cam, filename = settings()
 else:
   setting, location, cam, filename = set_settings(sys.argv)
-
+print cam
+print filename
 #
 # SETUP variables
 #
