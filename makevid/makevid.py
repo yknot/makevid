@@ -17,12 +17,10 @@ if len(sys.argv) < 5:
   setting, location, cam, filename = settings()
 else:
   setting, location, cam, filename = set_settings(sys.argv)
-print cam
-print filename
+
 #
 # SETUP variables
 #
-
 # if setting is stitching no need to run matricies() instead run something else
 if setting > 2:
 	# use this to get specific maps file that we need
@@ -34,7 +32,6 @@ else:
 #
 # RUN program
 #
-
 # run on one image
 if setting == 1:
   undistort_image(intrinsic_matrix[int(cam)-1], 
