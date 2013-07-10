@@ -8,6 +8,9 @@ import cv2.cv as cv
 import numpy as np
 import sys
 
+import os
+import subprocess
+
 # read in more intelligently based on input param
 # load the source images
 
@@ -31,8 +34,6 @@ def remap(maps, cams, filenames):
       i = 1
     else:
       print "Error"
-    # map1 = np.float32(maps['m_x'][i])
-    # map2 = np.float32(maps['m_y'][i])
     source = cv2.imread(name, 1)
     dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][i]), np.float32(maps['m_y'][i]), 1))
     print 'Done', str(c) +'!'
@@ -69,5 +70,53 @@ def remap(maps, cams, filenames):
         final[r][c][d] = (dst[0][r][c][d] if flag1 else 0)*wgt1[r][c] + (dst[1][r][c][d] if flag2 else 0)*wgt2[r][c] + (dst[2][r][c][d] if flag3 else 0)*wgt3[r][c] + (dst[3][r][c][d] if flag4 else 0)*wgt4[r][c]
 
   # write final image to file
-  cv2.imwrite('Mosaic.png', final)
+  # cv2.imwrite('Mosaic.png', final)
+  cv2.imwrite('out/'+filenames[0][5:], final)
   print 'Done!'
+
+
+
+def stitch_feeds(maps, cams, filenames):
+
+  print 'Undistorting and stitching feeds...'
+  #
+  # GET frames
+  #
+
+  print 'Starting Setup...'
+  sys.stdout.flush()
+  # runs setup batch file to create directories and convert video to images
+  cmd = 'setup_feed.bat', filenames[0], filenames[1], filenames[2], filenames[3]
+  p = subprocess.Popen(cmd)
+  # wait for the subprocess to finish
+  p.wait()
+
+  # finds the number of frames created
+  num_files = len([name for name in os.listdir('temp1/') 
+    if os.path.isfile('temp1/'+name)])
+
+
+  for i in range(1, num_files+1):
+    print '\ron frame ' + str(i),
+    sys.stdout.flush()
+     # create the filename and open the file
+    zeros = '0' * (8-len(str(i)))
+    filename = zeros + str(i) + '.png'
+    sources = ['temp1/'+filename,'temp2/'+filename,'temp3/'+filename,'temp4/'+filename]
+
+    remap(maps, cams, sources)
+
+  #
+  # OUTPUT video
+  #
+
+  print 'Puting video together...'
+  sys.stdout.flush()
+  # runs output batch file to run mencoder, mplayer, and ffmpeg
+  p2 = subprocess.Popen('output_feed.bat')
+
+  p2.wait()
+
+
+  print 'Done!'
+

@@ -7,6 +7,7 @@ mkdir temp
 mkdir out
 
 cd temp
+set name=..\%1
 REM take video and seperate into image file
-..\..\MPlayer\mplayer -vo png ..\Studio1-1.avi
+..\..\MPlayer\mplayer -vo png %name%
 cd ..

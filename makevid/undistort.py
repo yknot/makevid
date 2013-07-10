@@ -29,16 +29,14 @@ def undistort_image(int_mat, dist_coef, filename):
 
 
 def undistort_feed(int_mat, dist_coef, filename):
-
-  print 'Undistorting one feed...'
-
   #
   # GET frames
   #
-
+  print 'Undistorting one feed...'
   print 'Starting setup...'
   # runs setup batch file to create directories and convert video to images
-  p = subprocess.Popen('setup.bat')
+  cmd = 'setup.bat', filename
+  p = subprocess.Popen(cmd)
   # wait for the subprocess to finish
   p.wait()
 
@@ -46,12 +44,9 @@ def undistort_feed(int_mat, dist_coef, filename):
   num_files = len([name for name in os.listdir('temp/') 
     if os.path.isfile('temp/'+name)])
 
-
-
   #
   # UNDISTORT frames
   #
-
   # print statments to show progress
   print 'Starting undistorting frames...'
   print str(num_files), 'frames'
@@ -70,16 +65,13 @@ def undistort_feed(int_mat, dist_coef, filename):
     # write the image with the same filename but with out prefix
     cv2.imwrite('out/'+filename, destination)
 
-
   #
   # OUTPUT video
   #
-
   print 'Puting video together...'
   # runs output batch file to run mencoder, mplayer, and ffmpeg
   p2 = subprocess.Popen('output.bat')
 
   p2.wait()
-
 
   print 'Done!'

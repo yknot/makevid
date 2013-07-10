@@ -42,6 +42,7 @@ elif setting == 2:
     distortion_coefficient[int(cam)-1], filename)
 elif setting == 3:
   remap(maps, cam, filename)
-# future progress
+elif setting == 4:
+  stitch_feeds(maps, cam, filename)
 else:
   print 'Cannot perform this function at this time'
