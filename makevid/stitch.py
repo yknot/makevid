@@ -1,19 +1,15 @@
 #
 # stores stitching functions to be used by makevid.py
 #
-
 import cv2
 # used for legacy functions which should be changed out for cv2 functions
 import cv2.cv as cv
 import numpy as np
 import sys
-
 import os
 import subprocess
 
-# read in more intelligently based on input param
-# load the source images
-
+#########################################
 def remap(maps, cams, filenames):
   # 
   # REMAP images to final state
@@ -38,7 +34,8 @@ def remap(maps, cams, filenames):
     dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][i]), np.float32(maps['m_y'][i]), 1))
     print 'Done', str(c) +'!'
     sys.stdout.flush()
-
+    
+  #
   # STITCH images together
   #
   print 'Stitching Images'
@@ -74,8 +71,7 @@ def remap(maps, cams, filenames):
   cv2.imwrite('out/'+filenames[0][5:], final)
   print 'Done!'
 
-
-
+#########################################
 def stitch_feeds(maps, cams, filenames):
 
   print 'Undistorting and stitching feeds...'
