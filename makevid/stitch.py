@@ -42,34 +42,29 @@ def remap(maps, cams, filenames):
   # get final dimensions for loop
   row = len(dst[0])
   col = len(dst[0][0])
+  wgts = [0]*4
   # grab weights from maps dictionary
-  wgt1 = np.float32(maps['weights'][0])
-  wgt2 = np.float32(maps['weights'][3])
-  wgt3 = np.float32(maps['weights'][2])
-  wgt4 = np.float32(maps['weights'][1])
+  wgts[0] = np.float32(maps['weights'][0])
+  wgts[1] = np.float32(maps['weights'][3])
+  wgts[2] = np.float32(maps['weights'][2])
+  wgts[3] = np.float32(maps['weights'][1])
 
-  flag1 = 1 if type(dst[0]) is np.ndarray else 0
-  flag2 = 1 if type(dst[1]) is np.ndarray else 0
-  flag3 = 1 if type(dst[2]) is np.ndarray else 0
-  flag4 = 1 if type(dst[3]) is np.ndarray else 0
+  flgs = [0]*4
+  flgs[0] = 1 if type(dst[0]) is np.ndarray else 0
+  flgs[1] = 1 if type(dst[1]) is np.ndarray else 0
+  flgs[2] = 1 if type(dst[2]) is np.ndarray else 0
+  flgs[3] = 1 if type(dst[3]) is np.ndarray else 0
   # create blank image
   final = np.empty([row,col,3], 'uint8')
 
-  print row, 'rows'
-  print col, 'cols'
-
   # for each row, col and channel
-  for r in range(row):
-    print '\ron row ' + str(r),
-    for c in range(col):
-      for d in range(3):
-        # add matricies with the weights dictating how much of each pixel to use
-        final[r][c][d] = (dst[0][r][c][d] if flag1 else 0)*wgt1[r][c] + (dst[1][r][c][d] if flag2 else 0)*wgt2[r][c] + (dst[2][r][c][d] if flag3 else 0)*wgt3[r][c] + (dst[3][r][c][d] if flag4 else 0)*wgt4[r][c]
-
+  for i in range(4):
+    final[:,:,0] = final[:,:,0] + dst[i][:,:,0]*wgts[i]
+    final[:,:,1] = final[:,:,1] + dst[i][:,:,1]*wgts[i]
+    final[:,:,2] = final[:,:,2] + dst[i][:,:,2]*wgts[i]
   # write final image to file
   # cv2.imwrite('Mosaic.png', final)
   cv2.imwrite('out/'+filenames[0][5:], final)
-  print 'Done!'
 
 #########################################
 def stitch_feeds(maps, cams, filenames):
