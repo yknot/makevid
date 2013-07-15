@@ -41,7 +41,7 @@ elif setting == 2:
   undistort_feed(intrinsic_matrix[int(cam)-1],
     distortion_coefficient[int(cam)-1], filename)
 elif setting == 3:
-  remap(maps, cam, filename)
+  remap(maps, cam, filename, 1)
 elif setting == 4:
   stitch_feeds(maps, cam, filename)
 else:

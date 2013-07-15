@@ -10,12 +10,13 @@ import os
 import subprocess
 
 #########################################
-def remap(maps, cams, filenames):
+def remap(maps, cams, filenames, print_flag):
   # 
   # REMAP images to final state
   #
   # run based on number of images and what cameras they are for
-  print 'Remapping images'
+  if print_flag:
+    print 'Remapping images'
   dst = [0]*4
   for c, name in zip(cams,filenames):
     # map1 and 2 grabbed from maps dictionary
@@ -32,13 +33,15 @@ def remap(maps, cams, filenames):
       print "Error"
     source = cv2.imread(name, 1)
     dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][i]), np.float32(maps['m_y'][i]), 1))
-    print 'Done', str(c) +'!'
-    sys.stdout.flush()
+    if print_flag:
+      print 'Done', str(c) +'!'
+      sys.stdout.flush()
     
   #
   # STITCH images together
   #
-  print 'Stitching Images'
+  if print_flag:
+    print 'Stitching Images'
   # get final dimensions for loop
   row = len(dst[0])
   col = len(dst[0][0])
@@ -83,8 +86,17 @@ def stitch_feeds(maps, cams, filenames):
   p.wait()
 
   # finds the number of frames created
-  num_files = len([name for name in os.listdir('temp1/') 
-    if os.path.isfile('temp1/'+name)])
+  lens = []
+  lens.append(len([name for name in os.listdir('temp1/') 
+    if os.path.isfile('temp1/'+name)]))
+  lens.append(len([name for name in os.listdir('temp1/') 
+    if os.path.isfile('temp2/'+name)]))
+  lens.append(len([name for name in os.listdir('temp1/') 
+    if os.path.isfile('temp3/'+name)]))
+  lens.append(len([name for name in os.listdir('temp1/') 
+    if os.path.isfile('temp4/'+name)]))
+
+  num_files = min(lens)
 
 
   for i in range(1, num_files+1):
@@ -95,7 +107,7 @@ def stitch_feeds(maps, cams, filenames):
     filename = zeros + str(i) + '.png'
     sources = ['temp1/'+filename,'temp2/'+filename,'temp3/'+filename,'temp4/'+filename]
 
-    remap(maps, cams, sources)
+    remap(maps, cams, sources, 0)
 
   #
   # OUTPUT video
