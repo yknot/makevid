@@ -2,13 +2,8 @@
 # ask initial settings
 #
 
-# TODO:
-#   for images and feeds need to add more options for multiple filenames
-#   settings for running on all files in folder
-#
-
 import sys
-
+#######################################
 def set_settings(args):
   if args[1] == 'image':
     setting = 1
@@ -47,7 +42,7 @@ def set_settings(args):
 
   return setting, location, args[3], args[4]
 
-
+#######################################
 def settings():
 
   setting = int(raw_input('''Enter number:

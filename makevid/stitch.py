@@ -85,6 +85,39 @@ def stitch_feeds(maps, cams, filenames):
   # wait for the subprocess to finish
   p.wait()
 
+  os.chdir('temp1')
+  for filename in os.listdir('.'):
+    num = str(int(filename[:-4]) - 20)
+    z = 8 - len(num)
+    zeros = '0'*z
+    os.rename(filename, zeros + str(num) + '.png')
+
+  os.chdir('..')
+  os.chdir('temp2')
+  for filename in os.listdir('.'):
+    num = str(int(filename[:-4]) - 20)
+    z = 8 - len(num)
+    zeros = '0'*z
+    os.rename(filename, zeros + str(num) + '.png')
+
+  os.chdir('..')
+  os.chdir('temp3')
+  for filename in os.listdir('.'):
+    num = str(int(filename[:-4]) - 20)
+    z = 8 - len(num)
+    zeros = '0'*z
+    os.rename(filename, zeros + str(num) + '.png')
+
+  os.chdir('..')
+  os.chdir('temp4')
+  for filename in os.listdir('.'):
+    num = str(int(filename[:-4]) - 20)
+    z = 8 - len(num)
+    zeros = '0'*z
+    os.rename(filename, zeros + str(num) + '.png')
+
+  os.chdir('..')
+
   # finds the number of frames created
   lens = []
   lens.append(len([name for name in os.listdir('temp1/') 
@@ -97,7 +130,7 @@ def stitch_feeds(maps, cams, filenames):
     if os.path.isfile('temp4/'+name)]))
 
   num_files = min(lens)
-
+  print num_files
 
   for i in range(1, num_files+1):
     print '\ron frame ' + str(i),

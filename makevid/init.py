@@ -3,12 +3,16 @@ import numpy as np
 # for reading mat files
 import scipy.io
 
+#######################################
+#  NOT NEEDED ANYMORE
 def read_csvs(name):
   """function to read the csvs of calibration numbers"""
   calib = scipy.io.loadmat('calib.mat')
   
   return calib[name+'_fc'], calib[name+'_cc'], calib[name+'_kc']
 
+#######################################
+#  NOT NEEDED ANYMORE
 def matricies(location):
   """function to create the intrinsic and distortion matricies based
     on the variables recorded in the function above"""
@@ -44,6 +48,7 @@ def matricies(location):
                                             dtype=np.float32))
   return intrinsic_matrix, distortion_coefficient
 
+#######################################
 def maps(location):
   """function to get the maps needed to stitch together frames
      uses the location parameter to grap the right maps"""
