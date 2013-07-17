@@ -95,7 +95,7 @@ def stitch_feeds(maps, cams, filenames):
   os.chdir('..')
   os.chdir('temp2')
   for filename in os.listdir('.'):
-    num = str(int(filename[:-4]) - 20)
+    num = str(int(filename[:-4]) - 13)
     z = 8 - len(num)
     zeros = '0'*z
     os.rename(filename, zeros + str(num) + '.png')
@@ -103,15 +103,7 @@ def stitch_feeds(maps, cams, filenames):
   os.chdir('..')
   os.chdir('temp3')
   for filename in os.listdir('.'):
-    num = str(int(filename[:-4]) - 20)
-    z = 8 - len(num)
-    zeros = '0'*z
-    os.rename(filename, zeros + str(num) + '.png')
-
-  os.chdir('..')
-  os.chdir('temp4')
-  for filename in os.listdir('.'):
-    num = str(int(filename[:-4]) - 20)
+    num = str(int(filename[:-4]) - 17)
     z = 8 - len(num)
     zeros = '0'*z
     os.rename(filename, zeros + str(num) + '.png')
@@ -122,11 +114,11 @@ def stitch_feeds(maps, cams, filenames):
   lens = []
   lens.append(len([name for name in os.listdir('temp1/') 
     if os.path.isfile('temp1/'+name)]))
-  lens.append(len([name for name in os.listdir('temp1/') 
+  lens.append(len([name for name in os.listdir('temp2/') 
     if os.path.isfile('temp2/'+name)]))
-  lens.append(len([name for name in os.listdir('temp1/') 
+  lens.append(len([name for name in os.listdir('temp3/') 
     if os.path.isfile('temp3/'+name)]))
-  lens.append(len([name for name in os.listdir('temp1/') 
+  lens.append(len([name for name in os.listdir('temp4/') 
     if os.path.isfile('temp4/'+name)]))
 
   num_files = min(lens)
