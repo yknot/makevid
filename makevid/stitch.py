@@ -9,6 +9,8 @@ import sys
 import os
 import subprocess
 
+from time_split import *
+
 #########################################
 def remap(maps, cams, filenames, print_flag):
   # 
@@ -72,6 +74,16 @@ def remap(maps, cams, filenames, print_flag):
 #########################################
 def stitch_feeds(maps, cams, filenames):
 
+  #
+  # SYNC up frames
+  #
+  time = select_time()
+  names = []
+  names_short = []
+  for folder in filenames:
+    names_short.append(select_video(folder, time))
+    names.append(folder + '\\' + select_video(folder, time))
+
   print 'Undistorting and stitching feeds...'
   #
   # GET frames
@@ -80,48 +92,20 @@ def stitch_feeds(maps, cams, filenames):
   print 'Starting Setup...'
   sys.stdout.flush()
   # runs setup batch file to create directories and convert video to images
-  cmd = 'setup_feed.bat', filenames[0], filenames[1], filenames[2], filenames[3]
+  cmd = 'setup_feed.bat', names[0], names[1], names[2], names[3]
   p = subprocess.Popen(cmd)
   # wait for the subprocess to finish
   p.wait()
 
-  os.chdir('temp1')
-  for filename in os.listdir('.'):
-    num = str(int(filename[:-4]) - 20)
-    z = 8 - len(num)
-    zeros = '0'*z
-    os.rename(filename, zeros + str(num) + '.png')
-
-  os.chdir('..')
-  os.chdir('temp2')
-  for filename in os.listdir('.'):
-    num = str(int(filename[:-4]) - 13)
-    z = 8 - len(num)
-    zeros = '0'*z
-    os.rename(filename, zeros + str(num) + '.png')
-
-  os.chdir('..')
-  os.chdir('temp3')
-  for filename in os.listdir('.'):
-    num = str(int(filename[:-4]) - 17)
-    z = 8 - len(num)
-    zeros = '0'*z
-    os.rename(filename, zeros + str(num) + '.png')
-
-  os.chdir('..')
-
-  # finds the number of frames created
   lens = []
-  lens.append(len([name for name in os.listdir('temp1/') 
-    if os.path.isfile('temp1/'+name)]))
-  lens.append(len([name for name in os.listdir('temp2/') 
-    if os.path.isfile('temp2/'+name)]))
-  lens.append(len([name for name in os.listdir('temp3/') 
-    if os.path.isfile('temp3/'+name)]))
-  lens.append(len([name for name in os.listdir('temp4/') 
-    if os.path.isfile('temp4/'+name)]))
+  for i in range(1,5):
+    frames = calc_frames_off(names_short[i-1], time)
+    lens.append(len(os.listdir('temp'+str(i)+'/')) - frames)
+    sync_frames(i, frames)
 
   num_files = min(lens)
+  for i in lens:
+    print i
   print num_files
 
   for i in range(1, num_files+1):
