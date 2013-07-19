@@ -3,16 +3,15 @@ import numpy as np
 # for reading mat files
 import scipy.io
 
+
 #######################################
-#  NOT NEEDED ANYMORE
-def read_csvs(name):
-  """function to read the csvs of calibration numbers"""
+def read_mats(name):
+  """function to read the mats of calibration numbers"""
   calib = scipy.io.loadmat('calib.mat')
   
   return calib[name+'_fc'], calib[name+'_cc'], calib[name+'_kc']
 
 #######################################
-#  NOT NEEDED ANYMORE
 def matricies(location):
   """function to create the intrinsic and distortion matricies based
     on the variables recorded in the function above"""
@@ -30,7 +29,7 @@ def matricies(location):
     print 'Error: can\'t retrieve matricies'
 
   # get the variable values
-  fc, cc, kc = read_csvs(name)
+  fc, cc, kc = read_mats(name)
   
   # set up the blanck matricies
   intrinsic_matrix = []

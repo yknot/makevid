@@ -13,6 +13,12 @@ from time_split import *
 
 #########################################
 def remap(maps, cams, filenames, print_flag):
+
+  index = [0]*4
+  index[0] = 0
+  index[1] = 3
+  index[2] = 2
+  index[3] = 1
   # 
   # REMAP images to final state
   #
@@ -21,20 +27,8 @@ def remap(maps, cams, filenames, print_flag):
     print 'Remapping images'
   dst = [0]*4
   for c, name in zip(cams,filenames):
-    # map1 and 2 grabbed from maps dictionary
-    #### TODO probably don't need to duplicate variable, either pointer or direct ref in remap
-    if c == 1:
-      i = 0
-    elif c == 2:
-      i = 3
-    elif c == 3:
-      i = 2
-    elif c == 4:
-      i = 1
-    else:
-      print "Error"
     source = cv2.imread(name, 1)
-    dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][i]), np.float32(maps['m_y'][i]), 1))
+    dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][index[c-1]]), np.float32(maps['m_y'][index[c-1]]), 1))
     if print_flag:
       print 'Done', str(c) +'!'
       sys.stdout.flush()
@@ -44,51 +38,42 @@ def remap(maps, cams, filenames, print_flag):
   #
   if print_flag:
     print 'Stitching Images'
+
   # get final dimensions for loop
   row = len(dst[0])
   col = len(dst[0][0])
-  wgts = [0]*4
-  # grab weights from maps dictionary
-  wgts[0] = np.float32(maps['weights'][0])
-  wgts[1] = np.float32(maps['weights'][3])
-  wgts[2] = np.float32(maps['weights'][2])
-  wgts[3] = np.float32(maps['weights'][1])
 
-  flgs = [0]*4
-  flgs[0] = 1 if type(dst[0]) is np.ndarray else 0
-  flgs[1] = 1 if type(dst[1]) is np.ndarray else 0
-  flgs[2] = 1 if type(dst[2]) is np.ndarray else 0
-  flgs[3] = 1 if type(dst[3]) is np.ndarray else 0
   # create blank image
   final = np.empty([row,col,3], 'uint8')
 
   # for each row, col and channel
   for i in range(4):
-    final[:,:,0] = final[:,:,0] + dst[i][:,:,0]*wgts[i]
-    final[:,:,1] = final[:,:,1] + dst[i][:,:,1]*wgts[i]
-    final[:,:,2] = final[:,:,2] + dst[i][:,:,2]*wgts[i]
+    if type(dst[i]) is np.ndarray:
+      final[:,:,0] = final[:,:,0] + dst[i][:,:,0]*np.float32(maps['weights'][index[i]])
+      final[:,:,1] = final[:,:,1] + dst[i][:,:,1]*np.float32(maps['weights'][index[i]])
+      final[:,:,2] = final[:,:,2] + dst[i][:,:,2]*np.float32(maps['weights'][index[i]])
   # write final image to file
-  # cv2.imwrite('Mosaic.png', final)
-  cv2.imwrite('out/'+filenames[0][5:], final)
+  if print_flag:
+    cv2.imwrite('Mosaic.png', final)
+  else:
+    cv2.imwrite('out/'+filenames[0][5:], final)
 
 #########################################
 def stitch_feeds(maps, cams, filenames):
 
   #
-  # SYNC up frames
+  # FIND starting files
   #
-  time = select_time()
+  start_time, end_time = select_time()
   names = []
   names_short = []
   for folder in filenames:
-    names_short.append(select_video(folder, time))
-    names.append(folder + '\\' + select_video(folder, time))
+    names_short.append(select_video(folder, start_time))
+    names.append(folder + '\\' + select_video(folder, start_time))
 
-  print 'Undistorting and stitching feeds...'
   #
   # GET frames
   #
-
   print 'Starting Setup...'
   sys.stdout.flush()
   # runs setup batch file to create directories and convert video to images
@@ -97,17 +82,20 @@ def stitch_feeds(maps, cams, filenames):
   # wait for the subprocess to finish
   p.wait()
 
+  #
+  # SYNC frames
+  #
   lens = []
   for i in range(1,5):
-    frames = calc_frames_off(names_short[i-1], time)
+    frames = calc_frames_off(names_short[i-1], start_time)
     lens.append(len(os.listdir('temp'+str(i)+'/')) - frames)
     sync_frames(i, frames)
 
   num_files = min(lens)
-  for i in lens:
-    print i
-  print num_files
 
+  #
+  # REMAP frames
+  #
   for i in range(1, num_files+1):
     print '\ron frame ' + str(i),
     sys.stdout.flush()
@@ -121,14 +109,11 @@ def stitch_feeds(maps, cams, filenames):
   #
   # OUTPUT video
   #
-
   print 'Puting video together...'
   sys.stdout.flush()
   # runs output batch file to run mencoder, mplayer, and ffmpeg
   p2 = subprocess.Popen('output_feed.bat')
-
   p2.wait()
-
 
   print 'Done!'
 

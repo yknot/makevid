@@ -41,9 +41,11 @@ if setting == 1:
 elif setting == 2:
   undistort_feed(intrinsic_matrix[int(cam)-1],
     distortion_coefficient[int(cam)-1], filename)
+# run on multiple cameras for one image
 elif setting == 3:
   remap(maps, cam, filename, 1)
+# run on multiple cameras for feeds
 elif setting == 4:
   stitch_feeds(maps, cam, filename)
 else:
-  print 'Cannot perform this function at this time'
+  print 'Cannot perform this function'

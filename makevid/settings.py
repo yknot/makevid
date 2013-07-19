@@ -5,6 +5,7 @@
 import sys
 #######################################
 def set_settings(args):
+  """"Used to parse command line arguments as settings"""
   if args[1] == 'image':
     setting = 1
   elif args[1] == 'feed':
@@ -44,7 +45,7 @@ def set_settings(args):
 
 #######################################
 def settings():
-
+  """Used for walking user through settings"""
   setting = int(raw_input('''Enter number:
   \t1) undistort image
   \t2) undistort feed

@@ -110,10 +110,16 @@ def sync_frames(camNum, numOfFrames):
 
 #######################################
 def select_time():
-  time = [0]*7
-  temp = raw_input('Enter: year month day hour minute seconds milliseconds\n')
+  start_time = [0]*7
+  temp = raw_input('Enter Start: year month day hour minute seconds milliseconds\n')
   temp = temp.split()
   for i in range(len(temp)):
-    time[i] = int(temp[i])
+    start_time[i] = int(temp[i])
 
-  return time
+  end_time = [0]*7
+  temp = raw_input('Enter End: year month day hour minute seconds milliseconds\n')
+  temp = temp.split()
+  for i in range(len(temp)):
+    end_time[i] = int(temp[i])
+
+  return start_time, end_time
