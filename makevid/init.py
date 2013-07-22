@@ -2,6 +2,7 @@
 import numpy as np
 # for reading mat files
 import scipy.io
+import os
 
 
 #######################################
@@ -62,3 +63,14 @@ def maps(location):
     print 'Error: can\'t read maps'
 
   return maps
+
+
+#######################################
+def move_files(cam):
+  start = len(os.listdir('temp'+str(cam)))
+  for i in range(1, len(os.listdir('temp'))+1):
+    zerosOld = '0' * (8-len(str(i)))
+    nameOld = zerosOld + str(i) + '.png'
+    zerosNew = '0' * (8-len(str(i+start)))
+    nameNew = zerosNew + str(i+start) + '.png'
+    os.rename('temp/' + nameOld, 'temp'+str(cam)+'/'+nameNew)

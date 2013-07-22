@@ -8,8 +8,10 @@ import numpy as np
 import sys
 import os
 import subprocess
+import shutil
 
 from time_split import *
+from init import move_files
 
 #########################################
 def remap(maps, cams, filenames, print_flag):
@@ -59,37 +61,60 @@ def remap(maps, cams, filenames, print_flag):
     cv2.imwrite('out/'+filenames[0][5:], final)
 
 #########################################
-def stitch_feeds(maps, cams, filenames):
+def stitch_feeds(maps, cams, folders):
 
   #
   # FIND starting files
   #
-  start_time, end_time = select_time()
-  names = []
-  names_short = []
-  for folder in filenames:
-    names_short.append(select_video(folder, start_time))
-    names.append(folder + '\\' + select_video(folder, start_time))
+  startTime, endTime = select_time()
+  startNames = []
+  startNamesShort = []
+  endNames = []
+  endNamesShort = []
+  for folder in folders:
+    startNamesShort.append(select_video(folder, startTime))
+    startNames.append(folder + '\\' + select_video(folder, startTime))
+    endNamesShort.append(select_video(folder, endTime))
+    endNames.append(folder + '\\' + select_video(folder, endTime))
+
 
   #
   # GET frames
   #
   print 'Starting Setup...'
   sys.stdout.flush()
-  # runs setup batch file to create directories and convert video to images
-  cmd = 'setup_feed.bat', names[0], names[1], names[2], names[3]
-  p = subprocess.Popen(cmd)
-  # wait for the subprocess to finish
-  p.wait()
+  for i in cams:
+    if os.path.exists('temp'+str(i)):
+      shutil.rmtree('temp'+str(i))
+    os.makedirs('temp'+str(i))
+  if os.path.exists('out'):
+    shutil.rmtree('out')
+  os.makedirs('out')
+  flag = 0
+  for i in range(len(folders)):
+    for filename in os.listdir(folders[i]):
+      if filename == startNamesShort[cams[i]-1]:
+        flag = 1
+      if flag:
+        name = folders[i] + '\\' + filename
+        # runs setup batch file to create directories and convert video to images
+        cmd = 'setup_feed.bat', name
+        p = subprocess.Popen(cmd)
+        p.wait()
+        move_files(cams[i])
+      if filename == endNamesShort[cams[i]-1]:
+        break
 
   #
   # SYNC frames
   #
   lens = []
-  for i in range(1,5):
-    frames = calc_frames_off(names_short[i-1], start_time)
-    lens.append(len(os.listdir('temp'+str(i)+'/')) - frames)
-    sync_frames(i, frames)
+  for i in cams:
+    startFrames = calc_frames_off(startNamesShort[i-1], startTime, endTime, 1)
+    endFrames = calc_frames_off(endNamesShort[i-1], startTime, endTime, 0)
+    lens.append(len(os.listdir('temp'+str(i)+'/')) - startFrames - endFrames)
+    sync_frames(i, startFrames, 1)
+    sync_frames(i, endFrames, 0)
 
   num_files = min(lens)
 
@@ -116,4 +141,10 @@ def stitch_feeds(maps, cams, filenames):
   p2.wait()
 
   print 'Done!'
+
+  # clean up
+  for i in cams:
+    shutil.rmtree('temp'+str(i))
+  shutil.rmtree('out')
+  shutil.rmtree('temp')
 
