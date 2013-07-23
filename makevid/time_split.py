@@ -11,14 +11,17 @@ def sync_frames(camNum, numOfFrames, start):
   if start:
     for filename in os.listdir('.'):
       num = str(int(filename[:-4]) - numOfFrames)
-      z = 8 - len(num)
-      zeros = '0'*z
-      os.rename(filename, zeros + str(num) + '.png')
+      if int(num) < 1:
+        os.remove(filename)
+      else:
+        z = 8 - len(num)
+        zeros = '0'*z
+        os.rename(filename, zeros + str(num) + '.png')
   else:
     for filename in os.listdir('.'):
-      num = str(filename[:-4])      
+      num = str(filename[:-4])
       if int(filename[:-4]) > numOfFrames:
-        os.rename(filename, 'null' + num + '.png')
+        os.remove(filename)
 
   os.chdir('..')
 
@@ -40,16 +43,16 @@ def select_time():
   # return start_time, end_time
 
 #######################################
-def calc_frames_off(filename, startTime, endTime, start):
+def calc_frames_off(startName, startTime, endName, endTime):
   """calulates how many frames need to be removed from video to line it up with start time"""
   diff = [0]*7
-  diff[0] = startTime[0] - int(filename[0:4])
-  diff[1] = startTime[1] - int(filename[5:7])
-  diff[2] = startTime[2] - int(filename[8:10])
-  diff[3] = startTime[3] - int(filename[11:13])
-  diff[4] = startTime[4] - int(filename[14:16])
-  diff[5] = startTime[5] - int(filename[17:19])
-  diff[6] = startTime[6] - int(filename[20:23])
+  diff[0] = startTime[0] - int(startName[0:4])
+  diff[1] = startTime[1] - int(startName[5:7])
+  diff[2] = startTime[2] - int(startName[8:10])
+  diff[3] = startTime[3] - int(startName[11:13])
+  diff[4] = startTime[4] - int(startName[14:16])
+  diff[5] = startTime[5] - int(startName[17:19])
+  diff[6] = startTime[6] - int(startName[20:23])
   if diff[6] < 0:
     diff[5] = diff[5] - 1
     diff[6] = 1000 + diff[6]
@@ -69,36 +72,39 @@ def calc_frames_off(filename, startTime, endTime, start):
               diff[0] = diff[0] - 1
               diff[1] = 12 + diff[1]
 
-  frames = diff[4]*60000 + diff[5]*1000 + diff[6]
-  if not start:
-    diff[0] = endTime[0] - int(filename[0:4])
-    diff[1] = endTime[1] - int(filename[5:7])
-    diff[2] = endTime[2] - int(filename[8:10])
-    diff[3] = endTime[3] - int(filename[11:13])
-    diff[4] = endTime[4] - int(filename[14:16])
-    diff[5] = endTime[5] - int(filename[17:19])
-    diff[6] = endTime[6] - int(filename[20:23])
-    if diff[6] < 0:
-      diff[5] = diff[5] - 1
-      diff[6] = 1000 + diff[6]
-      if diff[5] < 0:
-        diff[4] = diff[4] - 1
-        diff[5] = 60 + diff[5]
-        if diff[4] < 0:
-          diff[3] = diff[3] - 1
-          diff[4] = 60 + diff[4]
-          if diff[3] < 0:
-            diff[2] = diff[2] - 1
-            diff[3] = 24 + diff[3]
-            if diff[2] < 0:
-              diff[1] = diff[1] - 1
-              diff[2] = 30 + diff[2]
-              if diff[1] < 0:
-                diff[0] = diff[0] - 1
-                diff[1] = 12 + diff[1]
-  frames = frames + diff[5]*1000 + diff[6] 
-
-  return frames / 50
+  startFrames = diff[5]*1000 + diff[6]
+  # print 'start frames', startFrames
+  # print 'diffs before end', diff
+  diff[0] = endTime[0] - int(endName[0:4])
+  diff[1] = endTime[1] - int(endName[5:7])
+  diff[2] = endTime[2] - int(endName[8:10])
+  diff[3] = endTime[3] - int(endName[11:13])
+  diff[4] = endTime[4] - int(endName[14:16])
+  diff[5] = endTime[5] - int(endName[17:19])
+  diff[6] = endTime[6] - int(endName[20:23])
+  if diff[6] < 0:
+    diff[5] = diff[5] - 1
+    diff[6] = 1000 + diff[6]
+    if diff[5] < 0:
+      diff[4] = diff[4] - 1
+      diff[5] = 60 + diff[5]
+      if diff[4] < 0:
+        diff[3] = diff[3] - 1
+        diff[4] = 60 + diff[4]
+        if diff[3] < 0:
+          diff[2] = diff[2] - 1
+          diff[3] = 24 + diff[3]
+          if diff[2] < 0:
+            diff[1] = diff[1] - 1
+            diff[2] = 30 + diff[2]
+            if diff[1] < 0:
+              diff[0] = diff[0] - 1
+              diff[1] = 12 + diff[1]
+  # print 'diffs after end', diff
+  endFrames = startFrames + diff[5]*1000 + diff[6] 
+  startFrames = startFrames / 50
+  endFrames = endFrames / 50
+  return startFrames, endFrames
 
 #######################################
 def select_video(location, time):
