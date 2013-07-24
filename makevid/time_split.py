@@ -27,7 +27,7 @@ def sync_frames(camNum, numOfFrames, start):
 
 #######################################
 def select_time():
-  return [2013,4,27,11,39,43,500], [2013,4,27,11,39,44,0]
+  return [2013,4,27,11,39,45,0], [2013,4,27,11,40,15,0]
   start_time = [0]*7
   temp = raw_input('Enter Start: year month day hour minute seconds milliseconds\n')
   temp = temp.split()
@@ -98,7 +98,7 @@ def calc_frames_off(startName, startTime, endTime):
             if diff[1] < 0:
               diff[0] = diff[0] - 1
               diff[1] = 12 + diff[1]
-  endFrames = diff[5]*1000 + diff[6] 
+  endFrames = diff[4]*60000 + diff[5]*1000 + diff[6] 
   startFrames = startFrames / 50
   endFrames = endFrames / 50
   return startFrames, endFrames

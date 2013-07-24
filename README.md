@@ -3,6 +3,14 @@ makevid
 
 a command line tool to un-distort, combine and help analyze multiple video feeds
 
+resolutions
+* Full - 2300 x 1850
+* 1080 - 1342 x 1080
+*  720 -  895 x  720
+*  481 -  598 x  481
+
+
+
 
 Flow chart:
 

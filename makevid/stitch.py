@@ -92,6 +92,7 @@ def stitch_feeds(maps, cams, folders):
   os.makedirs('out')
   flag = 0
   for i in range(len(folders)):
+    print '\rOn camera ' + str(i+1),
     for filename in os.listdir(folders[i]):
       if filename == startNamesShort[cams[i]-1]:
         flag = 1
@@ -104,7 +105,7 @@ def stitch_feeds(maps, cams, folders):
         move_files(cams[i])
       if filename == endNamesShort[cams[i]-1]:
         break
-
+  print
   #
   # SYNC frames
   #
