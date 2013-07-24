@@ -43,7 +43,7 @@ def select_time():
   # return start_time, end_time
 
 #######################################
-def calc_frames_off(startName, startTime, endName, endTime):
+def calc_frames_off(startName, startTime, endTime):
   """calulates how many frames need to be removed from video to line it up with start time"""
   diff = [0]*7
   diff[0] = startTime[0] - int(startName[0:4])
@@ -73,15 +73,13 @@ def calc_frames_off(startName, startTime, endName, endTime):
               diff[1] = 12 + diff[1]
 
   startFrames = diff[5]*1000 + diff[6]
-  # print 'start frames', startFrames
-  # print 'diffs before end', diff
-  diff[0] = endTime[0] - int(endName[0:4])
-  diff[1] = endTime[1] - int(endName[5:7])
-  diff[2] = endTime[2] - int(endName[8:10])
-  diff[3] = endTime[3] - int(endName[11:13])
-  diff[4] = endTime[4] - int(endName[14:16])
-  diff[5] = endTime[5] - int(endName[17:19])
-  diff[6] = endTime[6] - int(endName[20:23])
+  diff[0] = endTime[0] - startTime[0]
+  diff[1] = endTime[1] - startTime[1]
+  diff[2] = endTime[2] - startTime[2]
+  diff[3] = endTime[3] - startTime[3]
+  diff[4] = endTime[4] - startTime[4]
+  diff[5] = endTime[5] - startTime[5]
+  diff[6] = endTime[6] - startTime[6]
   if diff[6] < 0:
     diff[5] = diff[5] - 1
     diff[6] = 1000 + diff[6]
@@ -100,8 +98,7 @@ def calc_frames_off(startName, startTime, endName, endTime):
             if diff[1] < 0:
               diff[0] = diff[0] - 1
               diff[1] = 12 + diff[1]
-  # print 'diffs after end', diff
-  endFrames = startFrames + diff[5]*1000 + diff[6] 
+  endFrames = diff[5]*1000 + diff[6] 
   startFrames = startFrames / 50
   endFrames = endFrames / 50
   return startFrames, endFrames

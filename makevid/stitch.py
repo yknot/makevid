@@ -81,41 +81,41 @@ def stitch_feeds(maps, cams, folders):
   #
   # GET frames
   #
-  # print 'Starting Setup...'
-  # sys.stdout.flush()
-  # for i in cams:
-  #   if os.path.exists('temp'+str(i)):
-  #     shutil.rmtree('temp'+str(i))
-  #   os.makedirs('temp'+str(i))
-  # if os.path.exists('out'):
-  #   shutil.rmtree('out')
-  # os.makedirs('out')
-  # flag = 0
-  # for i in range(len(folders)):
-  #   for filename in os.listdir(folders[i]):
-  #     if filename == startNamesShort[cams[i]-1]:
-  #       flag = 1
-  #     if flag:
-  #       name = folders[i] + '\\' + filename
-  #       # runs setup batch file to create directories and convert video to images
-  #       cmd = 'setup_feed.bat', name
-  #       p = subprocess.Popen(cmd)
-  #       p.wait()
-  #       move_files(cams[i])
-  #     if filename == endNamesShort[cams[i]-1]:
-  #       break
+  print 'Starting Setup...'
+  sys.stdout.flush()
+  for i in cams:
+    if os.path.exists('temp'+str(i)):
+      shutil.rmtree('temp'+str(i))
+    os.makedirs('temp'+str(i))
+  if os.path.exists('out'):
+    shutil.rmtree('out')
+  os.makedirs('out')
+  flag = 0
+  for i in range(len(folders)):
+    for filename in os.listdir(folders[i]):
+      if filename == startNamesShort[cams[i]-1]:
+        flag = 1
+      if flag:
+        name = folders[i] + '\\' + filename
+        # runs setup batch file to create directories and convert video to images
+        cmd = 'setup_feed.bat', name
+        p = subprocess.Popen(cmd)
+        p.wait()
+        move_files(cams[i])
+      if filename == endNamesShort[cams[i]-1]:
+        break
 
   #
   # SYNC frames
   #
   lens = []
   for i in cams:
-    startFrames, endFrames = calc_frames_off(startNamesShort[i-1], startTime, endNamesShort[i-1], endTime)
+    startFrames, endFrames = calc_frames_off(startNamesShort[i-1], startTime, endTime)
     print 'Start', startFrames
-    print 'End', endFrames
+    print 'End', str(startFrames + endFrames)
+    sync_frames(i, startFrames, 1)
+    sync_frames(i, endFrames, 0)
     lens.append(len(os.listdir('temp'+str(i)+'/')))
-    #sync_frames(i, startFrames, 1)
-    #sync_frames(i, endFrames, 0)
 
   numFiles = min(lens)
   print numFiles
@@ -136,7 +136,7 @@ def stitch_feeds(maps, cams, folders):
   #
   # OUTPUT video
   #
-  print 'Puting video together...'
+  print '\nPuting video together...'
   sys.stdout.flush()
   # runs output batch file to run mencoder, mplayer, and ffmpeg
   p2 = subprocess.Popen('output_feed.bat')
