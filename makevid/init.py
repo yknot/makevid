@@ -3,6 +3,7 @@ import numpy as np
 # for reading mat files
 import scipy.io
 import os
+import sys
 
 
 #######################################
@@ -28,6 +29,7 @@ def matricies(location):
     cams = 6
   else:
     print 'Error: can\'t retrieve matricies'
+    sys.exit()
 
   # get the variable values
   fc, cc, kc = read_mats(name)
@@ -49,18 +51,29 @@ def matricies(location):
   return intrinsic_matrix, distortion_coefficient
 
 #######################################
-def maps(location):
+def maps(location, resolution):
   """function to get the maps needed to stitch together frames
      uses the location parameter to grap the right maps"""
 
   if location == 1:
-    maps = scipy.io.loadmat('studio1_maps.mat')
+    if resolution == 'full':
+      maps = scipy.io.loadmat('studio1_maps_full.mat')
+    elif resolution == '1080':
+      maps = scipy.io.loadmat('studio1_maps_1080.mat')
+    elif resolution == '720':
+      maps = scipy.io.loadmat('studio1_maps_720.mat')
+    elif resolution == '480':
+      maps = scipy.io.loadmat('studio1_maps_481.mat')
+    else:
+      print 'Resolution not supported'
+      sys.exit()
   elif location == 2:
     maps = scipy.io.loadmat('studio2_maps.mat')
   elif location == 3:
     maps = scipy.io.loadmat('mez_maps.mat')
   else:
     print 'Error: can\'t read maps'
+    sys.exit()
 
   return maps
 

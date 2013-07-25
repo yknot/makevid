@@ -14,31 +14,44 @@ from time_split import *
 from init import move_files
 
 #########################################
-def remap(maps, cams, filenames, print_flag):
+def remap(maps, cams, filenames, singleImageFlag):
 
+  # indexes need remapping
+  # CHANGE FOR STUDIO2 AND MEZ
   index = [0]*4
   index[0] = 0
   index[1] = 3
   index[2] = 2
   index[3] = 1
+
+  # if a single image add filename
+  # CHANGE FOR STUDIO2 AND MEZ
+  if singleImageFlag:
+    folder = filenames
+    filenames = []
+    if 1 in cams: filenames.append(folder + 'Studio1-1.png')
+    if 2 in cams: filenames.append(folder + 'Studio1-2.png')
+    if 3 in cams: filenames.append(folder + 'Studio1-3.png')
+    if 4 in cams: filenames.append(folder + 'Studio1-4.png')
+
   # 
   # REMAP images to final state
   #
-  # run based on number of images and what cameras they are for
-  if print_flag:
+  if singleImageFlag:
     print 'Remapping images'
   dst = [0]*4
+  # remap images into dst list
   for c, name in zip(cams,filenames):
     source = cv2.imread(name, 1)
     dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][index[c-1]]), np.float32(maps['m_y'][index[c-1]]), 1))
-    if print_flag:
+    if singleImageFlag:
       print 'Done', str(c) +'!'
       sys.stdout.flush()
     
   #
   # STITCH images together
   #
-  if print_flag:
+  if singleImageFlag:
     print 'Stitching Images'
 
   # get final dimensions for loop
@@ -55,34 +68,43 @@ def remap(maps, cams, filenames, print_flag):
       final[:,:,1] = final[:,:,1] + dst[i][:,:,1]*np.float32(maps['weights'][index[i]])
       final[:,:,2] = final[:,:,2] + dst[i][:,:,2]*np.float32(maps['weights'][index[i]])
   # write final image to file
-  if print_flag:
+  if singleImageFlag:
     cv2.imwrite('Mosaic.png', final)
   else:
     cv2.imwrite('out/'+filenames[0][5:], final)
 
 #########################################
-def stitch_feeds(maps, cams, folders):
+def stitch_feeds(maps, cams, folder, startTime, endTime):
 
   #
   # FIND starting files
   #
-  startTime, endTime = select_time()
   startNames = []
   startNamesShort = []
   endNames = []
   endNamesShort = []
-  for folder in folders:
-    startNamesShort.append(select_video(folder, startTime))
-    startNames.append(folder + '\\' + select_video(folder, startTime))
-    endNamesShort.append(select_video(folder, endTime))
-    endNames.append(folder + '\\' + select_video(folder, endTime))
 
+  # add sub folders
+  # CHANGE FOR STUDIO2 AND MEZ
+  folders = []
+  if 1 in cams: folders.append(folder + '1\\')
+  if 2 in cams: folders.append(folder + '2\\')
+  if 3 in cams: folders.append(folder + '3\\')
+  if 4 in cams: folders.append(folder + '4\\')
+
+  # for each folder get the start video and end video
+  for f in folders:
+    startNamesShort.append(select_video(f, startTime))
+    startNames.append(f + '\\' + select_video(f, startTime))
+    endNamesShort.append(select_video(f, endTime))
+    endNames.append(f + '\\' + select_video(f, endTime))
 
   #
   # GET frames
   #
   print 'Starting Setup...'
   sys.stdout.flush()
+  # clean up the folders
   for i in cams:
     if os.path.exists('temp'+str(i)):
       shutil.rmtree('temp'+str(i))
@@ -90,6 +112,8 @@ def stitch_feeds(maps, cams, folders):
   if os.path.exists('out'):
     shutil.rmtree('out')
   os.makedirs('out')
+
+  # get frames from videos, only selecting those neccesary
   flag = 0
   for i in range(len(folders)):
     print '\rOn camera ' + str(i+1),
@@ -109,21 +133,19 @@ def stitch_feeds(maps, cams, folders):
   #
   # SYNC frames
   #
+  # clean up frames by trimming start and end
   lens = []
   for i in cams:
     startFrames, endFrames = calc_frames_off(startNamesShort[i-1], startTime, endTime)
-    print 'Start', startFrames
-    print 'End', str(startFrames + endFrames)
     sync_frames(i, startFrames, 1)
     sync_frames(i, endFrames, 0)
     lens.append(len(os.listdir('temp'+str(i)+'/')))
 
   numFiles = min(lens)
-  print numFiles
-  print lens
   #
   # REMAP frames
   #
+  # for each image remap
   for i in range(1, numFiles+1):
     print '\ron frame ' + str(i),
     sys.stdout.flush()
@@ -144,10 +166,3 @@ def stitch_feeds(maps, cams, folders):
   p2.wait()
 
   print 'Done!'
-
-  # clean up
-  # for i in cams:
-  #   shutil.rmtree('temp'+str(i))
-  # shutil.rmtree('out')
-  # shutil.rmtree('temp')
-

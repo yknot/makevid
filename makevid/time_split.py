@@ -6,9 +6,13 @@ import os
 #######################################
 def sync_frames(camNum, numOfFrames, start):
   """removes the front frames from the folder containing the extracted frames"""
+  # change directory
   location = 'temp' + str(camNum)
   os.chdir(location)
+
+  # cut frames off the front
   if start:
+    # remove if before proper start
     for filename in os.listdir('.'):
       num = str(int(filename[:-4]) - numOfFrames)
       if int(num) < 1:
@@ -17,7 +21,9 @@ def sync_frames(camNum, numOfFrames, start):
         z = 8 - len(num)
         zeros = '0'*z
         os.rename(filename, zeros + str(num) + '.png')
+  # cut frames off end
   else:
+    # remove if above threshold
     for filename in os.listdir('.'):
       num = str(filename[:-4])
       if int(filename[:-4]) > numOfFrames:
@@ -26,25 +32,9 @@ def sync_frames(camNum, numOfFrames, start):
   os.chdir('..')
 
 #######################################
-def select_time():
-  return [2013,4,27,11,39,45,0], [2013,4,27,11,40,15,0]
-  start_time = [0]*7
-  temp = raw_input('Enter Start: year month day hour minute seconds milliseconds\n')
-  temp = temp.split()
-  for i in range(len(temp)):
-    start_time[i] = int(temp[i])
-
-  end_time = [0]*7
-  temp = raw_input('Enter End: year month day hour minute seconds milliseconds\n')
-  temp = temp.split()
-  for i in range(len(temp)):
-    end_time[i] = int(temp[i])
-
-  # return start_time, end_time
-
-#######################################
 def calc_frames_off(startName, startTime, endTime):
   """calulates how many frames need to be removed from video to line it up with start time"""
+  # find differences in times from filename
   diff = [0]*7
   diff[0] = startTime[0] - int(startName[0:4])
   diff[1] = startTime[1] - int(startName[5:7])
@@ -71,8 +61,9 @@ def calc_frames_off(startName, startTime, endTime):
             if diff[1] < 0:
               diff[0] = diff[0] - 1
               diff[1] = 12 + diff[1]
-
   startFrames = diff[5]*1000 + diff[6]
+
+  # find length of desired video
   diff[0] = endTime[0] - startTime[0]
   diff[1] = endTime[1] - startTime[1]
   diff[2] = endTime[2] - startTime[2]
@@ -98,6 +89,7 @@ def calc_frames_off(startName, startTime, endTime):
             if diff[1] < 0:
               diff[0] = diff[0] - 1
               diff[1] = 12 + diff[1]
+
   endFrames = diff[4]*60000 + diff[5]*1000 + diff[6] 
   startFrames = startFrames / 50
   endFrames = endFrames / 50
@@ -106,6 +98,7 @@ def calc_frames_off(startName, startTime, endTime):
 #######################################
 def select_video(location, time):
   """Returns closest video to time given in location given"""
+  # parses filename and compares to start time
   name = ''
   for filename in os.listdir(location):
     if time[0] > int(filename[0:4]):
