@@ -3,7 +3,7 @@ del output.avi
 cd out
 
 REM put images into file
-..\..\MPlayer\mencoder "mf://*.png" -mf type=png:w=895:h=720:fps=18 -ovc lavc -lavcopts vcodec=huffyuv:format=422p -oac copy -o huffyuv.avi
+..\..\MPlayer\mencoder "mf://*.png" -mf type=png:w=1280:h=960:fps=18 -ovc lavc -lavcopts vcodec=huffyuv:format=422p -oac copy -o huffyuv.avi
 REM convert video to a stream
 ..\..\MPlayer\mplayer huffyuv.avi -vo yuv4mpeg
 REM convert stream into video
