@@ -22,9 +22,10 @@ for example 'Studio1-1.png'. The parent folder can be specifed seperately though
 When running this program for multiple feeds the files should be left in their origonal naming scheme with date and time information for a title and in folders numbered by the camera they were from. For example if all the Studio1 videos are in the parent folder Studio1/ the videos should be in Studio1/1/, Studio1/2/ and so on.
 
 
-
 Help text
 ---------
+The text below can be displayed with the -h flag, and shows what settings are available.
+Some of the settings available are start and end time selection, parent folder location, which camera studio, resolution of the video (and therefore speed of stitching), and which cameras will be in the final product.
 <pre>
 usage: makevid.py [-h] [-t hour minute second] [-e hour minute second] [-f folder]
                    [-l location] [-r resolution] [-c cams]

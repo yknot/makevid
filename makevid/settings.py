@@ -32,27 +32,28 @@ optional arguments:
                          4 = feeds
   """
 #######################################
-def default():
-  print"""
-Defaults:
-  startHour = 11
-  startMin = 39
-  startSec = 45
-  startMilli = 0
-  endHour = 11
-  endMin = 40
-  endSec = 15
-  endMilli = 0
-  folder = Studio1\\feeds\\
-  location = 1
-  resolution = 720
-  cams = 1234
-  setting = 4
-  """
+def default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, endMilli, folder, location, resolution, cams, setting):
+  print 'Defaults:'
+  print '  startHour =', int(startHour)
+  print '  startMin =', int(startMin)
+  print '  startSec =', int(startSec)
+  print '  startMilli =', int(startMilli)
+  print '  endHour =', int(endHour)
+  print '  endMin =', int(endMin)
+  print '  endSec =', int(endSec)
+  print '  endMilli =', int(endMilli)
+  print '  folder =', folder
+  print '  location =', int(location)
+  print '  resolution =', resolution
+  print '  cams =', cams
+  print '  setting =', int(setting)
+
 #######################################
 def flags(args):
   """Interperet flags set by user"""
-  # default values
+
+  ################################
+  ######## DEFAULT VALUES ########  
   startHour = 11
   startMin = 39
   startSec = 45
@@ -62,10 +63,11 @@ def flags(args):
   endSec = 15
   endMilli = 0
   folder = 'Studio1\\feeds\\'
-  loc = 1
+  location = 1
   resolution = '720'
-  c = '1234'
+  cams = '1234'
   setting = 4
+  ################################
 
   # go through arguments and use flags to identitfy 
   for i in range(len(args)):
@@ -75,7 +77,7 @@ def flags(args):
       help()
       sys.exit()
     elif args[i] == '-d':
-      default()
+      default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, endMilli, folder, location, resolution, cams, setting)
       sys.exit()
     elif args[i] == '-t':
       startHour = int(args[i+1])
@@ -88,22 +90,22 @@ def flags(args):
     elif args[i] == '-f':
       folder = args[i+1]
     elif args[i] == '-l':
-      loc = int(args[i+1])
+      location = int(args[i+1])
     elif args[i] == '-r':
       resolution = args[i+1]
     elif args[i] == '-c':
-      c = args[i+1]
+      cams = args[i+1]
     elif args[i] == '-s':
       setting = int(args[i+1])
     else:
       continue
 
   # seperate the cams into a list
-  cams = []
-  for letter in c:
-    cams.append(int(letter))
+  c = []
+  for letter in cams:
+    c.append(int(letter))
 
   # return all the settings
-  return [2013, 4, 27, startHour, startMin, startSec, startMilli], [2013, 4, 27, endHour, endMin, endSec, endMilli], folder, loc, resolution, cams, setting
+  return [2013, 4, 27, startHour, startMin, startSec, startMilli], [2013, 4, 27, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
 
 #######################################
