@@ -61,9 +61,9 @@ def maps(location, resolution):
     elif resolution == '1080':
       maps = scipy.io.loadmat('studio1_maps/1080.mat')
     elif resolution == '720':
-      maps = scipy.io.loadmat('studio1_maps/720.mat')
+      maps = scipy.io.loadmat('studio1_maps/730.mat')
     elif resolution == '480':
-      maps = scipy.io.loadmat('studio1_maps/481.mat')
+      maps = scipy.io.loadmat('studio1_maps/486.mat')
     else:
       print 'Resolution not supported'
       sys.exit()

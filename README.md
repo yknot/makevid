@@ -44,8 +44,8 @@ optional arguments:
   -r resolution        set resolution
                          full = 2300 x 1850
                          1080 = 1342 x 1080
-                         720  = 895 x 720
-                         480  = 598 x 481
+                         720  = 908 x 730
+                         480  = 604 x 486
   -s setting           specify which setting
                          1 = image
                          2 = feed
