@@ -4,20 +4,9 @@ makevid
 a command line tool to un-distort, combine and help analyze multiple video feeds
 
 
-
-
-
-
-
-
-
-
-
-
-
 Help text
 ---------
-
+<pre>
 usage: makevid.py [-h] [-t hour minute second] [-e hour minute second] [-f folder]
                    [-l location] [-r resolution] [-c cams]
 
@@ -43,7 +32,7 @@ optional arguments:
                          2 = feed
                          3 = images
                          4 = feeds
-
+</pre>
 Flow chart
 ----------
 
