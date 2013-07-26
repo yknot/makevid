@@ -3,6 +3,25 @@ makevid
 
 a command line tool to un-distort, combine and help analyze multiple video feeds
 
+Description
+-----------
+
+This tool is used specifically for the feeds from Studio1, Studio2 and Mez cameras in RPI's EMPAC facility.
+For each location you can perform the following tasks:
+* undistorting one image
+* undistorting one feed of images
+* stitching together multiple images
+* stitching together multiple feeds of images
+
+To do this consult the help text and use the appropriate flags. You can also change the defaults so that
+running the program with no flags will produce the desired result. This is done by editing the actual source code.
+
+When running this program for multiple images the filenames should be of the format 'location-cameraNumber.png'
+for example 'Studio1-1.png'. The parent folder can be specifed seperately though.
+
+When running this program for multiple feeds the files should be left in their origonal naming scheme with date and time information for a title and in folders numbered by the camera they were from. For example if all the Studio1 videos are in the parent folder Studio1/ the videos should be in Studio1/1/, Studio1/2/ and so on.
+
+
 
 Help text
 ---------
