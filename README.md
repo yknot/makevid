@@ -1,7 +1,18 @@
 makevid
 =======
 
-a command line tool to un-distort, combine and help analyze multiple video feeds
+a command line tool to un-distort, combine and help analyze multiple video feeds from RPI's EMPAC facility  
+  
+  
+Requires the use of programs:
+* mplayer
+* mencoder
+* ffmpeg  
+
+Python libraries:
+* numpy
+* scipy
+* opencv (cv2)
 
 Description
 -----------
