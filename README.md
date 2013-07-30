@@ -14,6 +14,12 @@ Python libraries:
 * scipy
 * opencv (cv2)
 
+Included with python install:
+* shutil
+* os
+* sys
+* subprocess
+
 Description
 -----------
 
