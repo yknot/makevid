@@ -105,6 +105,7 @@ def flags(args):
   for letter in cams:
     c.append(int(letter))
 
+  c.sort()
   # return all the settings
   return [2013, 4, 27, startHour, startMin, startSec, startMilli], [2013, 4, 27, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
 

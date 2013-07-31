@@ -72,11 +72,10 @@ def maps(location, resolution):
   elif location == 3:
     maps = scipy.io.loadmat('mez_maps.mat')
   else:
-    print 'Error: can\'t read maps'
+    print 'Error: location invalid'
     sys.exit()
 
   return maps
-
 
 #######################################
 def move_files(cam):
@@ -87,3 +86,34 @@ def move_files(cam):
     zerosNew = '0' * (8-len(str(i+start)))
     nameNew = zerosNew + str(i+start) + '.png'
     os.rename('temp/' + nameOld, 'temp'+str(cam)+'/'+nameNew)
+
+#######################################
+def indexes(location):
+  """Provides the indexes for the cameras according to location"""
+  if location == 1:
+    index = [0]*4
+    index[0] = 0
+    index[1] = 3
+    index[2] = 2
+    index[3] = 1
+  elif location == 2:
+    index = [0]*6
+    index[0] = 0
+    index[1] = 3
+    index[2] = 2
+    index[3] = 1
+    index[4] = 4
+    index[5] = 5
+  elif location == 3:
+    index = [0]*6
+    index[0] = 0
+    index[1] = 3
+    index[2] = 2
+    index[3] = 1
+    index[4] = 4
+    index[5] = 5
+  else:
+    print 'Error: location invalid'
+    sys.exit()
+    
+  return index

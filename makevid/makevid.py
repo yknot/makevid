@@ -8,7 +8,7 @@ from settings import *
 from init import *
 from undistort import *
 from stitch import *
-from time_split import *
+# from time_split import *
 
 
 #
@@ -24,6 +24,7 @@ startTime, endTime, folder, location, resolution, cam, setting = flags(sys.argv)
 if setting > 2:
 	# use this to get specific maps file that we need
   maps = maps(location, resolution)
+  index = indexes(location)
 else:
   # get the neccessary calibration matricies
   intrinsic_matrix, distortion_coefficient = matricies(location)
@@ -41,9 +42,9 @@ elif setting == 2:
     distortion_coefficient[int(cam)-1], folder)
 # run on multiple cameras for one image
 elif setting == 3:
-  remap(maps, cam, folder, 1)
+  remap(maps, cam, folder, index, location, 1)
 # run on multiple cameras for feeds
 elif setting == 4:
-  stitch_feeds(maps, cam, folder, startTime, endTime)
+  stitch_feeds(maps, cam, folder, startTime, endTime, index, location)
 else:
   print 'Cannot perform this function'

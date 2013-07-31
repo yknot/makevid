@@ -14,34 +14,24 @@ from time_split import *
 from init import move_files
 
 #########################################
-def remap(maps, cams, filenames, singleImageFlag):
-
-  # indexes need remapping
-  # CHANGE FOR STUDIO2 AND MEZ
-  index = [0]*4
-  index[0] = 0
-  index[1] = 3
-  index[2] = 2
-  index[3] = 1
+def remap(maps, cams, filenames, index, location, singleImageFlag):
 
   # if a single image add filename
-  # CHANGE FOR STUDIO2 AND MEZ
   if singleImageFlag:
-    folder = filenames
-    filenames = []
-    if 1 in cams: filenames.append(folder + 'Studio1-1.png')
-    if 2 in cams: filenames.append(folder + 'Studio1-2.png')
-    if 3 in cams: filenames.append(folder + 'Studio1-3.png')
-    if 4 in cams: filenames.append(folder + 'Studio1-4.png')
+    filenames = get_filenames(filenames, cams, location)
 
   # 
   # REMAP images to final state
   #
   if singleImageFlag:
     print 'Remapping images'
-  dst = [0]*4
+
+  dst = [0]*len(index)
   # remap images into dst list
   for c, name in zip(cams,filenames):
+    if not os.path.isfile(name):
+      print 'Error: No such file', name
+      sys.exit()
     source = cv2.imread(name, 1)
     dst[c-1] = (cv2.remap(source, np.float32(maps['m_x'][index[c-1]]), np.float32(maps['m_y'][index[c-1]]), 1))
     if singleImageFlag:
@@ -55,14 +45,14 @@ def remap(maps, cams, filenames, singleImageFlag):
     print 'Stitching Images'
 
   # get final dimensions for loop
-  row = len(dst[0])
-  col = len(dst[0][0])
+  row = len(dst[cams[0]-1])
+  col = len(dst[cams[0]-1][0])
 
   # create blank image
   final = np.empty([row,col,3], 'uint8')
 
   # for each row, col and channel
-  for i in range(4):
+  for i in range(len(index)):
     if type(dst[i]) is np.ndarray:
       final[:,:,0] = final[:,:,0] + dst[i][:,:,0]*np.float32(maps['weights'][index[i]])
       final[:,:,1] = final[:,:,1] + dst[i][:,:,1]*np.float32(maps['weights'][index[i]])
@@ -74,7 +64,7 @@ def remap(maps, cams, filenames, singleImageFlag):
     cv2.imwrite('out/'+filenames[0][5:], final)
 
 #########################################
-def stitch_feeds(maps, cams, folder, startTime, endTime):
+def stitch_feeds(maps, cams, folder, startTime, endTime, index, location):
 
   #
   # FIND starting files
@@ -85,12 +75,7 @@ def stitch_feeds(maps, cams, folder, startTime, endTime):
   endNamesShort = []
 
   # add sub folders
-  # CHANGE FOR STUDIO2 AND MEZ
-  folders = []
-  if 1 in cams: folders.append(folder + '1\\')
-  if 2 in cams: folders.append(folder + '2\\')
-  if 3 in cams: folders.append(folder + '3\\')
-  if 4 in cams: folders.append(folder + '4\\')
+  folders = get_folders(folder, cams, location)
 
   # for each folder get the start video and end video
   for f in folders:
@@ -154,7 +139,7 @@ def stitch_feeds(maps, cams, folder, startTime, endTime):
     filename = zeros + str(i) + '.png'
     sources = ['temp1/'+filename,'temp2/'+filename,'temp3/'+filename,'temp4/'+filename]
 
-    remap(maps, cams, sources, 0)
+    remap(maps, cams, sources, index, location, 0)
 
   #
   # OUTPUT video
@@ -166,3 +151,47 @@ def stitch_feeds(maps, cams, folder, startTime, endTime):
   p2.wait()
 
   print 'Done!'
+
+
+#######################################
+def get_filenames(filenames, cams, location):
+  """For single frame get full file paths"""
+  folder = filenames
+  filenames = []
+  if location == 1:
+    if 1 in cams: filenames.append(folder + 'Studio1-1.png')
+    if 2 in cams: filenames.append(folder + 'Studio1-2.png')
+    if 3 in cams: filenames.append(folder + 'Studio1-3.png')
+    if 4 in cams: filenames.append(folder + 'Studio1-4.png')
+  elif location == 2:
+    if 1 in cams: filenames.append(folder + 'Studio2-1.png')
+    if 2 in cams: filenames.append(folder + 'Studio2-2.png')
+    if 3 in cams: filenames.append(folder + 'Studio2-3.png')
+    if 4 in cams: filenames.append(folder + 'Studio2-4.png')
+    if 5 in cams: filenames.append(folder + 'Studio2-5.png')
+    if 6 in cams: filenames.append(folder + 'Studio2-6.png')
+  elif location == 3:
+    if 1 in cams: filenames.append(folder + 'Mez-1.png')
+    if 2 in cams: filenames.append(folder + 'Mez-2.png')
+    if 3 in cams: filenames.append(folder + 'Mez-3.png')
+    if 4 in cams: filenames.append(folder + 'Mez-4.png')
+    if 5 in cams: filenames.append(folder + 'Mez-5.png')
+    if 6 in cams: filenames.append(folder + 'Mez-6.png')
+  else:
+    print 'Error: location invalid'
+    sys.exit()
+
+  return filenames
+
+#####################################
+def get_folders(folder, cams, location):
+  folders = []
+  if 1 in cams: folders.append(folder + '1\\')
+  if 2 in cams: folders.append(folder + '2\\')
+  if 3 in cams: folders.append(folder + '3\\')
+  if 4 in cams: folders.append(folder + '4\\')
+  if location == 2 or location == 3:
+    if 5 in cams: folders.append(folder + '5\\')
+    if 6 in cams: folders.append(folder + '6\\')
+
+  return folders
