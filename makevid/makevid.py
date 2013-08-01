@@ -34,12 +34,12 @@ else:
 #
 # run on one image
 if setting == 1:
-  undistort_image(intrinsic_matrix[int(cam)-1], 
-    distortion_coefficient[int(cam)-1], folder)
+  undistort_image(intrinsic_matrix[int(cam[0])-1], 
+    distortion_coefficient[cam[0]-1], folder)
 # run on one feed
 elif setting == 2:
   undistort_feed(intrinsic_matrix[int(cam)-1],
-    distortion_coefficient[int(cam)-1], folder)
+    distortion_coefficient[cam-1], folder)
 # run on multiple cameras for one image
 elif setting == 3:
   remap(maps, cam, folder, index, location, 1)
