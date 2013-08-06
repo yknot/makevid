@@ -10,9 +10,9 @@ REM convert stream into video
 ..\..\MPlayer\ffmpeg -i stream.yuv -r 18 -b 6048k ..\output.avi
 cd ..
 
-rmdir out /S /Q
-rmdir temp /S /Q
-rmdir temp1 /S /Q
-rmdir temp2 /S /Q
-rmdir temp3 /S /Q
-rmdir temp4 /S /Q
+REM rmdir out /S /Q
+REM rmdir temp /S /Q
+REM rmdir temp1 /S /Q
+REM rmdir temp2 /S /Q
+REM rmdir temp3 /S /Q
+REM rmdir temp4 /S /Q

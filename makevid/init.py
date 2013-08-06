@@ -68,7 +68,10 @@ def maps(location, resolution):
       print 'Resolution not supported'
       sys.exit()
   elif location == 2:
-    maps = scipy.io.loadmat('studio2_maps.mat')
+    if resolution == '720':
+      maps = scipy.io.loadmat('studio2_maps/720.mat')
+    else:
+      print 'Resolution not supported'
   elif location == 3:
     maps = scipy.io.loadmat('mez_maps.mat')
   else:
@@ -99,9 +102,9 @@ def indexes(location):
   elif location == 2:
     index = [0]*6
     index[0] = 0
-    index[1] = 3
+    index[1] = 1
     index[2] = 2
-    index[3] = 1
+    index[3] = 3
     index[4] = 4
     index[5] = 5
   elif location == 3:

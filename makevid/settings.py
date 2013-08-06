@@ -40,7 +40,7 @@ def default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, 
   print '  startMilli =', int(startMilli)
   print '  endHour =', int(endHour)
   print '  endMin =', int(endMin)
-  print '  endSec =', int(endSec)
+  print '  endSec =', it(endSec)
   print '  endMilli =', int(endMilli)
   print '  folder =', folder
   print '  location =', int(location)
@@ -54,12 +54,20 @@ def flags(args):
 
   ################################
   ######## DEFAULT VALUES ########  
-  startHour = 11
-  startMin = 39
-  startSec = 45
+  # startHour = 11
+  # startMin = 39
+  # startSec = 45
+  # startMilli = 0
+  # endHour = 11
+  # endMin = 40
+  # endSec = 15
+  # endMilli = 0
+  startHour = 15
+  startMin = 35
+  startSec = 8
   startMilli = 0
-  endHour = 11
-  endMin = 40
+  endHour = 15
+  endMin = 35
   endSec = 15
   endMilli = 0
   folder = 'Studio1\\feeds\\'
@@ -107,6 +115,6 @@ def flags(args):
 
   c.sort()
   # return all the settings
-  return [2013, 4, 27, startHour, startMin, startSec, startMilli], [2013, 4, 27, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
+  return [2013, 5, 9, startHour, startMin, startSec, startMilli], [2013, 5, 9, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
 
 #######################################

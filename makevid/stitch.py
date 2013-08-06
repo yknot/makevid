@@ -102,6 +102,7 @@ def stitch_feeds(maps, cams, folder, startTime, endTime, index, location):
   flag = 0
   for i in range(len(folders)):
     print '\rOn camera ' + str(i+1),
+    sys.stdout.flush()
     for filename in os.listdir(folders[i]):
       if filename == startNamesShort[cams[i]-1]:
         flag = 1
@@ -137,7 +138,10 @@ def stitch_feeds(maps, cams, folder, startTime, endTime, index, location):
      # create the filename and open the file
     zeros = '0' * (8-len(str(i)))
     filename = zeros + str(i) + '.png'
-    sources = ['temp1/'+filename,'temp2/'+filename,'temp3/'+filename,'temp4/'+filename]
+    if location == 1:
+      sources = ['temp1/'+filename,'temp2/'+filename,'temp3/'+filename,'temp4/'+filename]
+    else:
+      sources = ['temp1/'+filename,'temp2/'+filename,'temp3/'+filename,'temp4/'+filename, 'temp5/' + filename, 'temp6/' + filename]
 
     remap(maps, cams, sources, index, location, 0)
 
