@@ -16,3 +16,5 @@ rmdir temp1 /S /Q
 rmdir temp2 /S /Q
 rmdir temp3 /S /Q
 rmdir temp4 /S /Q
+rmdir temp5 /S /Q
+rmdir temp6 /S /Q

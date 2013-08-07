@@ -87,35 +87,35 @@ def stitch_feeds(maps, cams, folder, startTime, endTime, index, location):
   #
   # GET frames
   #
-  # print 'Starting Setup...'
-  # sys.stdout.flush()
-  # # clean up the folders
-  # for i in cams:
-  #   if os.path.exists('temp'+str(i)):
-  #     shutil.rmtree('temp'+str(i))
-  #   os.makedirs('temp'+str(i))
-  # if os.path.exists('out'):
-  #   shutil.rmtree('out')
-  # os.makedirs('out')
+  print 'Starting Setup...'
+  sys.stdout.flush()
+  # clean up the folders
+  for i in cams:
+    if os.path.exists('temp'+str(i)):
+      shutil.rmtree('temp'+str(i))
+    os.makedirs('temp'+str(i))
+  if os.path.exists('out'):
+    shutil.rmtree('out')
+  os.makedirs('out')
 
-  # # get frames from videos, only selecting those neccesary
-  # flag = 0
-  # for i in range(len(folders)):
-  #   print '\rOn camera ' + str(cams[i]),
-  #   sys.stdout.flush()
-  #   for filename in os.listdir(folders[i]):
-  #     if filename == startNamesShort[i]:
-  #       flag = 1
-  #     if flag:
-  #       name = folders[i] + '\\' + filename
-  #       # runs setup batch file to create directories and convert video to images
-  #       cmd = 'setup_feed.bat', name
-  #       p = subprocess.Popen(cmd)
-  #       p.wait()
-  #       move_files(cams[i])
-  #     if filename == endNamesShort[i]:
-  #       break
-  # print
+  # get frames from videos, only selecting those neccesary
+  flag = 0
+  for i in range(len(folders)):
+    print '\rOn camera ' + str(cams[i]),
+    sys.stdout.flush()
+    for filename in os.listdir(folders[i]):
+      if filename == startNamesShort[i]:
+        flag = 1
+      if flag:
+        name = folders[i] + '\\' + filename
+        # runs setup batch file to create directories and convert video to images
+        cmd = 'setup_feed.bat', name
+        p = subprocess.Popen(cmd)
+        p.wait()
+        move_files(cams[i])
+      if filename == endNamesShort[i]:
+        break
+  print
   #
   # SYNC frames
   #
