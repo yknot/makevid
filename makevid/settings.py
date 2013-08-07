@@ -63,12 +63,12 @@ def flags(args):
   # endSec = 15
   # endMilli = 0
   startHour = 15
-  startMin = 35
-  startSec = 8
+  startMin = 21
+  startSec = 16
   startMilli = 0
   endHour = 15
-  endMin = 35
-  endSec = 15
+  endMin = 21
+  endSec = 18
   endMilli = 0
   folder = 'Studio1\\feeds\\'
   location = 1
@@ -115,6 +115,6 @@ def flags(args):
 
   c.sort()
   # return all the settings
-  return [2013, 5, 9, startHour, startMin, startSec, startMilli], [2013, 5, 9, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
+  return [2013, 6, 4, startHour, startMin, startSec, startMilli], [2013, 6, 4, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
 
 #######################################
