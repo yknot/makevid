@@ -68,12 +68,29 @@ def maps(location, resolution):
       print 'Resolution not supported'
       sys.exit()
   elif location == 2:
-    if resolution == '720':
+    if resolution == 'full':
+      maps = scipy.io.loadmat('studio2_maps/full.mat')
+    elif resolution == '1080':
+      maps = scipy.io.loadmat('studio2_maps/1080.mat')
+    elif resolution == '720':
       maps = scipy.io.loadmat('studio2_maps/720.mat')
+    elif resolution == '480':
+      maps = scipy.io.loadmat('studio2_maps/480.mat')
     else:
       print 'Resolution not supported'
+      sys.exit()
   elif location == 3:
-    maps = scipy.io.loadmat('mez_maps.mat')
+    if resolution == 'full':
+      maps = scipy.io.loadmat('mez_maps/full.mat')
+    elif resolution == '1080':
+      maps = scipy.io.loadmat('mez_maps/1080.mat')
+    elif resolution == '720':
+      maps = scipy.io.loadmat('mez_maps/720.mat')
+    elif resolution == '480':
+      maps = scipy.io.loadmat('mez_maps/480.mat')
+    else:
+      print 'Resolution not supported' 
+      sys.exit()
   else:
     print 'Error: location invalid'
     sys.exit()
