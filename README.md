@@ -69,6 +69,11 @@ optional arguments:
                          2 = feed
                          3 = images
                          4 = feeds
+  -e event             pick event for date
+                         1 = Gamefest
+                         2 = Volleyball
+                         3 = CRAIVE
+                         4 = Graduate Sound Recording
 </pre>
 Flow chart
 ----------
