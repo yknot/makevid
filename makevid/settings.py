@@ -30,9 +30,14 @@ optional arguments:
                          2 = feed
                          3 = images
                          4 = feeds
+  -e event             pick event for date
+                         1 = Gamefest
+                         2 = Volleyball
+                         3 = CRAIVE
+                         4 = Graduate Sound Recording
   """
 #######################################
-def default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, endMilli, folder, location, resolution, cams, setting):
+def default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, endMilli, folder, location, resolution, cams, setting, event):
   print 'Defaults:'
   print '  startHour =', int(startHour)
   print '  startMin =', int(startMin)
@@ -40,13 +45,14 @@ def default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, 
   print '  startMilli =', int(startMilli)
   print '  endHour =', int(endHour)
   print '  endMin =', int(endMin)
-  print '  endSec =', it(endSec)
+  print '  endSec =', int(endSec)
   print '  endMilli =', int(endMilli)
   print '  folder =', folder
   print '  location =', int(location)
   print '  resolution =', resolution
   print '  cams =', cams
   print '  setting =', int(setting)
+  print '  event =', event
 
 #######################################
 def flags(args):
@@ -75,6 +81,7 @@ def flags(args):
   resolution = '720'
   cams = '1234'
   setting = 4
+  event = 1
   ################################
 
   # go through arguments and use flags to identitfy 
@@ -85,7 +92,7 @@ def flags(args):
       help()
       sys.exit()
     elif args[i] == '-d':
-      default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, endMilli, folder, location, resolution, cams, setting)
+      default(startHour, startMin, startSec, startMilli, endHour, endMin, endSec, endMilli, folder, location, resolution, cams, setting, event)
       sys.exit()
     elif args[i] == '-t':
       startHour = int(args[i+1])
@@ -105,6 +112,9 @@ def flags(args):
       cams = args[i+1]
     elif args[i] == '-s':
       setting = int(args[i+1])
+    elif args[i] == '-v':
+      month = int(args[i+1])
+      day = int(args[i+2])
     else:
       continue
 
@@ -113,8 +123,26 @@ def flags(args):
   for letter in cams:
     c.append(int(letter))
 
+  month = 0
+  day = 0
+  if event == 1:
+    month = 4
+    day = 27
+  elif event == 2:
+    month = 5
+    day = 9
+  elif event == 3:
+    month = 6
+    day = 4
+  elif event == 4:
+    month = 6
+    day = 10
+  else:
+    print 'Not a supported event'
+    sys.exit()
+
   c.sort()
   # return all the settings
-  return [2013, 6, 4, startHour, startMin, startSec, startMilli], [2013, 6, 4, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
+  return [2013, month, day, startHour, startMin, startSec, startMilli], [2013, month, day, endHour, endMin, endSec, endMilli], folder, location, resolution, c, setting
 
 #######################################

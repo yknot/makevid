@@ -10,7 +10,6 @@ from undistort import *
 from stitch import *
 # from time_split import *
 
-
 #
 # GET settings
 #
